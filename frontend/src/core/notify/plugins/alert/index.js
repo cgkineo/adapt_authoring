@@ -47,6 +47,8 @@ define(function(require) {
 
 	function openPopup(data) {
 		SweetAlert(getSettings(data), data.callback);
+    // HACK to prevent us losing the scaffold forms when we open an alert
+    $('body').removeClass('stop-scrolling');
 	}
 
 	var Alert = function(data) {

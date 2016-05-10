@@ -1,0 +1,22 @@
+<div class="presetEdit-inner">
+  <a href="" class="button close"><i class="fa fa-times"></i></a>
+  <div class="title">{{t 'app.presetedittitle'}}</div>
+  <div class="description">{{t 'app.preseteditdesc'}}</div>
+  <div class="presets">
+    {{#each presets.models}}
+      <div class="preset" data-name="{{attributes.displayName}}">
+        <div class="name">
+          <div class="label">{{attributes.displayName}}</div>
+          <a href="" class="button edit"><i class="fa fa-pencil-square-o"></i></a>
+          <a href="" class="button delete"><i class="fa fa-trash"></i></a>
+        </div>
+        <div class="nameEdit">
+          <div class="input"><input type="text" value="{{attributes.displayName}}"></div>
+          <a href="" class="button save"><i class="fa fa-floppy-o"></i></a>
+          <a href="" class="button cancel"><i class="fa fa-times"></i></a>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
+<div class="screenlock"></div>

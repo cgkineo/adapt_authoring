@@ -12,6 +12,9 @@
     "_theme": {
       "type": "string"
     },
+    "_themepreset": {
+      "type": "string"
+    },
     "_menu": {
       "type": "string"
     },

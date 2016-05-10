@@ -33,6 +33,109 @@
       "inputType":"TextArea",
       "validators": []
     },
+    "_appearance": {
+      "type": "object",
+      "properties": {
+        "_backgroundColor": {
+          "type": "string",
+          "title": "Background colour",
+          "default": "",
+          "inputType": "ColorPicker",
+          "validators": []
+        },
+        "_backgroundImage": {
+          "type": "object",
+          "title": "Background Image",
+          "properties": {
+            "_small": {
+              "type": "string",
+              "title": "Small",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the small breakpoint, e.g. mobile phones"
+            },
+            "_medium": {
+              "type": "string",
+              "title": "Medium",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the medium breakpoint, e.g. tablet devices"
+            },
+            "_large": {
+              "type": "string",
+              "title": "Large",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the large breakpoint, e.g. laptop/desktop computers"
+            },
+            "_repeat": {
+              "type": "bool",
+              "title": "Repeat image",
+              "default": "",
+              "inputType": {"type": "Boolean", "options": [true, false]},
+              "validators": []
+            }
+          }
+        },
+        "_backgroundGradient": {
+          "type": "object",
+          "title": "Background Gradient",
+          "properties": {
+            "topColor": {
+              "type": "string",
+              "title": "Top colour",
+              "default": "",
+              "inputType": "ColorPicker",
+              "validators": []
+            },
+            "bottomColor": {
+              "type": "string",
+              "title": "Bottom colour",
+              "default": "",
+              "inputType": "ColorPicker",
+              "validators": []
+            }
+          }
+        },
+        "_invertColors": {
+          "type": "bool",
+          "title": "Invert colours",
+          "default": "",
+          "inputType": {"type": "Boolean", "options": [true, false]},
+          "validators": []
+        },
+        "_minimumHeights": {
+          "type": "object",
+          "title": "Minimum heights",
+          "properties": {
+            "_small": {
+              "type": "string",
+              "title": "Small",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            },
+            "_medium": {
+              "type": "string",
+              "title": "Medium",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            },
+            "_large": {
+              "type": "string",
+              "title": "Large",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            }
+          }
+        }
+      }
+    },
     "_classes": {
       "type":"string",
       "default":"",

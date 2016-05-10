@@ -40,6 +40,9 @@ define(function(require) {
   var EditorThemeCollectionView = require('editorTheme/views/editorThemeCollectionView');
   var EditorThemeCollectionSidebarView = require('editorTheme/views/editorThemeCollectionSidebarView');
 
+  var EditorThemingView = require('core/editor/theming/views/editorThemingView');
+  var EditorThemingSidebarView = require('core/editor/theming/views/editorThemingSidebarView');
+
   var EditorComponentListView = require('editorPage/views/editorComponentListView');
   var EditorComponentListSidebarView = require('editorPage/views/editorComponentListSidebarView');
 
@@ -338,6 +341,18 @@ define(function(require) {
             Origin.trigger('location:title:update', {title: 'Select theme'});
             Origin.sidebar.addView(new EditorThemeCollectionSidebarView().$el);
             Origin.editingOverlay.addView(new EditorThemeCollectionView({model: configModel}).$el);
+          }
+        });
+        break;
+
+      case 'edittheme':
+        var configModel = new EditorConfigModel({_courseId: route1});
+
+        configModel.fetch({
+          success: function() {
+            Origin.trigger('location:title:update', {title: 'Select theme'});
+            Origin.sidebar.addView(new EditorThemingSidebarView().$el);
+            Origin.editingOverlay.addView(new EditorThemingView({ model: configModel }).$el);
           }
         });
         break;

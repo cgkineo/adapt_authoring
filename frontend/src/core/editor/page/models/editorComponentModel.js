@@ -11,9 +11,9 @@ define(function(require) {
         _siblings:'components',
         _children: false,
         // These are the only attributes which should be permitted on a save
-        whitelistAttributes: ['_id', '_componentType', '_courseId', '_layout', '_parentId', 
-            '_type', 'properties', '_component', '_extensions', '_classes', '_isOptional', '_isAvailable', 'body', 'displayTitle', 
-            'title', 'version']
+        whitelistAttributes: ['_id', '_componentType', '_courseId', '_layout', '_parentId',
+            '_type', 'properties', '_component', '_extensions', '_classes', '_isOptional', '_isAvailable', 'body', 'displayTitle',
+            'title', 'version', '_appearance']
     });
 
     return EditorComponentModel;

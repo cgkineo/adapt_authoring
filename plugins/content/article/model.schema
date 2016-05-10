@@ -4,35 +4,138 @@
   "id": "http://jsonschema.net",
   "$ref": "http://localhost/system/content.schema",
   "properties": {
-  	"title": {
-		"type":"string",
-		"required":true,
-		"default": "New Article Title",
-		"inputType":"Text",
-		"validators": ["required"]
+    "title": {
+      "type":"string",
+      "required":true,
+      "default": "New Article Title",
+      "inputType":"Text",
+      "validators": ["required"]
     },
     "displayTitle": {
-		"type":"string",
-		"required":false,
-		"default": "New Article Title",
-		"inputType":"DisplayTitle",
-		"validators": [],
-		"help": "When viewing an article - this is the title that will be displayed on the page"
+      "type":"string",
+      "required":false,
+      "default": "New Article Title",
+      "inputType":"DisplayTitle",
+      "validators": [],
+      "help": "When viewing an article - this is the title that will be displayed on the page"
     },
     "body":{
-		"type":"string",
-		"default" : "",
-		"inputType":"TextArea",
-		"validators": []
-	},
-	"_classes": {
-		"type":"string",
-		"default":"",
-		"isSetting": true,
-		"inputType":"Text",
-		"validators": [],
-		"title": "Classes",
-		"help": "Used to style or manipulate the look and feel of this Article. These are predefined in the theme."
+      "type":"string",
+      "default" : "",
+      "inputType":"TextArea",
+      "validators": []
+    },
+    "_appearance": {
+      "type": "object",
+      "properties": {
+        "_backgroundColor": {
+          "type": "string",
+          "title": "Background colour",
+          "default": "",
+          "inputType": "ColorPicker",
+          "validators": []
+        },
+        "_backgroundImage": {
+          "type": "object",
+          "title": "Background Image",
+          "properties": {
+            "_small": {
+              "type": "string",
+              "title": "Small",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the small breakpoint, e.g. mobile phones"
+            },
+            "_medium": {
+              "type": "string",
+              "title": "Medium",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the medium breakpoint, e.g. tablet devices"
+            },
+            "_large": {
+              "type": "string",
+              "title": "Large",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Background image for the large breakpoint, e.g. laptop/desktop computers"
+            },
+            "_repeat": {
+              "type": "bool",
+              "title": "Repeat image",
+              "default": "",
+              "inputType": {"type": "Boolean", "options": [true, false]},
+              "validators": []
+            }
+          }
+        },
+        "_backgroundGradient": {
+          "type": "object",
+          "title": "Background Gradient",
+          "properties": {
+            "topColor": {
+              "type": "string",
+              "title": "Top colour",
+              "default": "",
+              "inputType": "ColorPicker",
+              "validators": []
+            },
+            "bottomColor": {
+              "type": "string",
+              "title": "Bottom colour",
+              "default": "",
+              "inputType": "ColorPicker",
+              "validators": []
+            }
+          }
+        },
+        "_invertColors": {
+          "type": "bool",
+          "title": "Invert colours",
+          "default": "",
+          "inputType": {"type": "Boolean", "options": [true, false]},
+          "validators": []
+        },
+        "_minimumHeights": {
+          "type": "object",
+          "title": "Minimum heights",
+          "properties": {
+            "_small": {
+              "type": "string",
+              "title": "Small",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            },
+            "_medium": {
+              "type": "string",
+              "title": "Medium",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            },
+            "_large": {
+              "type": "string",
+              "title": "Large",
+              "default": "",
+              "inputType": "Text",
+              "validators": []
+            }
+          }
+        }
+      }
+    },
+    "_classes": {
+      "type":"string",
+      "default":"",
+      "isSetting": true,
+      "inputType":"Text",
+      "validators": [],
+      "title": "Classes",
+      "help": "Used to style or manipulate the look and feel of this Article. These are predefined in the theme."
     },
     "_isOptional": {
       "type": "bool",
@@ -43,7 +146,7 @@
       "title": "Is this optional?",
       "help": "If set to 'true' this article, any block, and components within it, do not have to be completed"
     },
-		 "_isAvailable": {
+     "_isAvailable": {
       "type": "bool",
       "default": "true",
       "isSetting": true,
@@ -53,7 +156,7 @@
       "help": "If set to 'false' this will not be displayed"
     },
     "_extensions": {
-    	"type":"object"
+      "type":"object"
     }
   }
 }

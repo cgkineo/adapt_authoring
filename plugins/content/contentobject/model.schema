@@ -98,6 +98,48 @@
       "required": true,
       "default": 1,
       "editorOnly": true
+    },
+    "_appearance": {
+      "type": "object",
+      "properties": {
+        "_backgroundColor": {
+          "type": "string",
+          "title": "Background colour",
+          "default": "",
+          "inputType": "ColorPicker",
+          "validators": []
+        },
+        "_headerImage": {
+          "type": "object",
+          "title": "Background Image",
+          "properties": {
+            "_small": {
+              "type": "string",
+              "title": "Small",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Header image for the small breakpoint, e.g. mobile phones"
+            },
+            "_medium": {
+              "type": "string",
+              "title": "Medium",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Header image for the medium breakpoint, e.g. tablet devices"
+            },
+            "_large": {
+              "type": "string",
+              "title": "Large",
+              "default": "",
+              "inputType": "Asset:image",
+              "validators": [],
+              "help": "Header image for the large breakpoint, e.g. laptop/desktop computers"
+            }
+          }
+        }
+      }
     }
   }
 }
