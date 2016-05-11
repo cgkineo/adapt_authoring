@@ -153,7 +153,6 @@
   "app.configurationsettings": "Configuration settings",
   "app.themesettings": "Theme settings",
   "app.themepicker": "Theme Picker",
-
   "app.theming": "Theming",
   "app.savepreset": "Save as preset",
   "app.themingtitle": "Set the style for your course",
@@ -174,12 +173,12 @@
   "app.customisethemedesc": "<p>You can adjust a number of variables in your chosen theme below.</p><p><em><b>Tip:</b> You can also save your selections here as a 'preset' for quick access later. Do this using the button in the sidebar to the left of the screen.</em><p>",
   "app.themeoverwrite": "By continuing, you will overwrite the saved settings for the %{preset} preset",
   "app.presetinputtext": "Enter a name for new preset",
+  "app.duplicatepreseterror": "A preset with that name already exists.",
   "app.presetedit": "Manage presets",
   "app.presetedittitle": "Manage saved presets",
   "app.preseteditdesc": "You can view, change name and delete the saved presets for the chosen theme here.",
   "app.presetdeletetext": "This will delete the saved '<b>%{preset}</b>' preset. <br/><br/><b>IMPORTANT:</b> <em>This will affect any existing courses using this preset.<em>",
   "app.presetnameplaceholder": "Enter new name",
-
   "app.themecustomisation": "Theme customisation",
   "app.status": "Status",
   "app.lastupdated": "Last updated",

@@ -95,7 +95,7 @@
             },
             "_color": {
               "type": "string",
-              "title": "Text colour",
+              "title": "Quotation marks colour",
               "default": "",
               "inputType": "ColorPicker",
               "validators": [],

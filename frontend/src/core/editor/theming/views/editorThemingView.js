@@ -3,6 +3,7 @@ define(function(require){
   var Backbone = require('backbone');
   var EditorOriginView = require('editorGlobal/views/editorOriginView');
   var Handlebars = require('handlebars');
+  var Helpers = require('coreJS/app/helpers');
   var Origin = require('coreJS/app/origin');
   var PresetCollection = require('../collections/editorPresetCollection');
   var PresetEditView = require('./editorPresetEditView');
@@ -118,6 +119,7 @@ define(function(require){
       select.append($('<option>', { value: "", disabled: 'disabled', selected: 'selected' }).text(window.polyglot.t('app.selectinstr')));
       // add options
       _.each(this.themes.models, function(item, index) {
+        if(item.get('_isAvailableInEditor') === false) return;
         select.append($('<option>', { value: item.get('_id') }).text(item.get('displayName')));
       }, this);
 
@@ -130,7 +132,7 @@ define(function(require){
     },
 
     updatePresetSelect: function() {
-      var theme = $('.theme select').val();
+      var theme = this.$('.theme select').val();
       var presets = this.presets.where({ parentTheme: theme });
       var select = this.$('.preset select');
       // remove options first
@@ -170,6 +172,35 @@ define(function(require){
       }
     },
 
+    showPresetEdit: function(event) {
+      event && event.preventDefault();
+      var parentTheme = this.getSelectedTheme().get('_id');
+      var pev = new PresetEditView({
+        model: new Backbone.Model({ presets: new Backbone.Collection(this.presets.where({ parentTheme: parentTheme })) })
+      });
+      $('body').append(pev.el);
+    },
+
+    restoreDefaultSettings: function(event) {
+      event && event.preventDefault();
+      var self = this;
+      Origin.Notify.confirm({
+        type: 'warning',
+        text: window.polyglot.t('app.restoredefaultstext'),
+        callback: function(confirmed) {
+          if(confirmed) {
+            var preset = self.getSelectedPreset();
+            var settings = (preset) ? preset.get('properties') : self.getDefaultThemeSettings();
+            self.restoreFormSettings(settings);
+          }
+        }
+      });
+    },
+
+    /**
+    * Data persistence
+    */
+
     // checks form for errors, returns true if valid, false otherwise
     validateForm: function() {
       var selectedTheme = this.getSelectedTheme();
@@ -183,6 +214,29 @@ define(function(require){
         return false;
       }
       return true;
+    },
+
+    savePreset: function(presetName) {
+      // first, save the form data
+      this.form.commit();
+
+      var presetModel = new PresetModel({
+        displayName: presetName,
+        parentTheme: this.getSelectedTheme().get('_id'),
+        properties: _.pick(this.form.model.attributes, Object.keys(this.form.model.get('properties')))
+      });
+
+      var self = this;
+      presetModel.save(null, {
+        error: function(model, response, options) {
+          Origin.Notify.alert({ type: 'error', text: response });
+        },
+        success: function() {
+          self.presets.add(presetModel);
+          // HACK reorder things so this works without setTimeout later
+          window.setTimeout(function() { self.$('.preset select').val(presetModel.get('_id')); }, 1);
+        }
+      });
     },
 
     saveData: function(event) {
@@ -234,19 +288,6 @@ define(function(require){
       }
     },
 
-    savePreset: function(presetName) {
-      // first, save the form data
-      this.form.commit();
-
-      var presetModel = new PresetModel({
-        displayName: presetName,
-        parentTheme: this.getSelectedTheme().get('_id'),
-        properties: _.pick(this.form.model.attributes, Object.keys(this.form.model.get('properties')))
-      });
-      presetModel.save();
-      this.presets.add(presetModel);
-    },
-
     navigateBack: function(event) {
       event && event.preventDefault();
       Backbone.history.history.back();
@@ -292,34 +333,10 @@ define(function(require){
     * Event handling
     */
 
-    showPresetEdit: function(event) {
-      event && event.preventDefault();
-      var parentTheme = this.getSelectedTheme().get('_id');
-      var pev = new PresetEditView({
-        model: new Backbone.Model({ presets: new Backbone.Collection(this.presets.where({ parentTheme: parentTheme })) })
-      });
-      $('body').append(pev.el);
-    },
-
-    restoreDefaultSettings: function(event) {
-      event && event.preventDefault();
-      var self = this;
-      Origin.Notify.confirm({
-        type: 'warning',
-        text: window.polyglot.t('app.restoredefaultstext'),
-        callback: function(confirmed) {
-          if(confirmed) {
-            var preset = self.getSelectedPreset();
-            console.log(preset);
-            var settings = (preset) ? preset.get('properties') : self.getDefaultThemeSettings();
-            self.restoreFormSettings(settings);
-          }
-        }
-      });
-    },
-
     onEditPreset: function(data) {
-      this.presets.findWhere({ displayName: data.oldValue }).save();
+      var model = this.presets.findWhere({ displayName: data.oldValue });
+      model.set('displayName', data.newValue);
+      model.save();
     },
 
     onDeletePreset: function(preset) {
@@ -360,9 +377,17 @@ define(function(require){
       Origin.Notify.alert({
         type: 'input',
         text: window.polyglot.t('app.presetinputtext'),
+        closeOnConfirm: false,
         showCancelButton: true,
         callback: function() {
-          self.savePreset(arguments[0]);
+          var preset = self.presets.findWhere({ displayName: arguments[0] })
+          if(preset) {
+            swal.showInputError(window.polyglot.t('app.duplicatepreseterror'));
+          } else {
+            // watch out for injection attacks
+            self.savePreset(Helpers.escapeText(arguments[0]));
+            swal.close();
+          }
         }
       });
     },
