@@ -1,0 +1,16 @@
+<div class="inner">
+  <div class="heading row">
+      <div class="timestamp"><h4>Time</h4></div>
+      <div class="level"><h4>Level</h4></div>
+      <div class="message"><h4>Message</h4></div>
+  </div>
+  <div class="logs">
+    {{#each logs}}
+      <div class="log row {{level}}">
+          <div class="timestamp">{{momentFormat timestamp "L LTS"}}</div>
+          <div class="level">{{level}}</div>
+          <div class="message">{{message}}</div>
+      </div>
+    {{/each}}
+  </div>
+</div>

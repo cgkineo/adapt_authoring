@@ -1,0 +1,28 @@
+.serverLog {
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    font-size: 110%;
+    .inner {
+        padding: 20px;
+    }
+    .row {
+        display: block;
+        margin-bottom: 10px;
+        div {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        &.heading {
+            border-bottom: 3px dashed rgb(255, 255, 255);
+            padding-bottom: 10px;
+        }
+        .timestamp { width: 15%; }
+        .level     { width: 10%; }
+        .message   { width: 65%; word-break: break-all; }
+        // log types
+        &.error  { color: red; }
+        &.info   { color: grey; }
+        &.debug  { color: grey; }
+    }
+}
