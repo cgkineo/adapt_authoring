@@ -1,6 +1,6 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
-
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var BackboneForms = require('backboneForms');
     var Origin = require('coreJS/app/origin');
@@ -40,9 +40,6 @@ define(function(require) {
             if (this.value === null) {
                 this.value = '';
             }
-            
-            this.setValue(this.value);
-            this.$el.css('backgroundColor', this.getValue());
 
             _.defer(_.bind(function() {
                 var that = this;
@@ -58,7 +55,18 @@ define(function(require) {
                     }
                 });
 
+                /*
+                * Append reset button
+                */
 
+                // TODO externalise this...
+                var btnStyle = 'display:inline-block;margin-left:10px;position:relative;vertical-align:top;top:10px;';
+                var btn = '<div class="reset" style=' + btnStyle + '><i class="fa fa-undo"></i></div>';
+                this.$el.after(btn);
+
+                this.$el.siblings('.reset').click(_.bind(this.resetValue, this));
+
+                this.setValue(this.value);
             }, this));
 
             return this;
@@ -67,6 +75,26 @@ define(function(require) {
         removeColorPicker: function() {
             var colorpickerId = this.$el.data('colorpickerId');
             $("#"+colorpickerId).remove();
+        },
+
+        setValue: function(newValue) {
+            Backbone.Form.editors.Text.prototype.setValue.apply(this, arguments);
+
+            this.value = newValue;
+            this.$el.css('backgroundColor', this.value);
+
+            if(this.value) {
+                console.log('show');
+                this.$el.siblings('.reset').show();
+            }
+            else {
+                console.log('hide');
+                this.$el.siblings('.reset').hide();
+            }
+        },
+
+        resetValue: function() {
+            this.setValue('');
         }
 
     }, {
