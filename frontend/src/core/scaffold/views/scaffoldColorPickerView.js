@@ -49,9 +49,6 @@ define(function(require) {
                     onChange: function (hsb, hex, rgb) {
                         that.setValue('#' + hex);
                         that.$el.css('backgroundColor', '#' + hex);
-                    },
-                    onBeforeShow: function () {
-                        that.$el.ColorPickerSetColor(that.value);
                     }
                 });
 
@@ -60,15 +57,21 @@ define(function(require) {
                 */
 
                 // TODO externalise this...
-                var btnStyle = 'display:inline-block;margin-left:10px;position:relative;vertical-align:top;top:10px;';
-                var btn = '<div class="reset" style=' + btnStyle + '><i class="fa fa-undo"></i></div>';
+                var btnStyle = 'display:inline-block;margin-left:10px;position:relative;vertical-align:top;top:10px;cursor:pointer;';
+                var btn = '<div class="reset" style="' + btnStyle + '"><i class="fa fa-ban"></i> Clear colour</div>';
                 this.$el.after(btn);
 
                 this.$el.siblings('.reset').click(_.bind(this.resetValue, this));
 
-                this.setValue(this.value);
-            }, this));
+                if(this.value) {
+                    this.setValue(this.value);
+                    this.$el.siblings('.reset').show();
+                }
+                else {
+                    this.$el.siblings('.reset').hide();
+                }
 
+            }, this));
             return this;
         },
 
@@ -83,14 +86,8 @@ define(function(require) {
             this.value = newValue;
             this.$el.css('backgroundColor', this.value);
 
-            if(this.value) {
-                console.log('show');
-                this.$el.siblings('.reset').show();
-            }
-            else {
-                console.log('hide');
-                this.$el.siblings('.reset').hide();
-            }
+            if(this.value) this.$el.siblings('.reset').show();
+            else this.$el.siblings('.reset').hide();
         },
 
         resetValue: function() {
@@ -104,8 +101,7 @@ define(function(require) {
     Origin.on('app:dataReady', function() {
         Origin.scaffold.addCustomField('ColorPicker', ScaffoldColorPickerView);
     })
-    
+
 
     return ScaffoldColorPickerView;
-
-})
+});

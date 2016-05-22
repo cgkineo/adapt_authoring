@@ -158,16 +158,17 @@ function initialize () {
                   res.statusCode = 404;
                   return res.json({ success: false, message: 'theme not found' });
                 }
-                console.log('Updating theme', results[0].name);
                 // Update the course config object: add theme, remove old preset
-                app.contentmanager.update('config', { _courseId: courseId }, { _theme: results[0].name, _themepreset: "" }, function (err) {
+                // HACK requires _courseId for permissions
+                app.contentmanager.update('config', { _courseId: courseId }, { _courseId: courseId, _theme: results[0].name, _themepreset: "" }, function (err) {
                   if (err) {
                     return next(err);
                   }
 
                   // As the theme has changed, lose any previously set theme settings
                   // These will not apply to the new theme
-                  app.contentmanager.update('course', { _id: courseId }, { themeSettings: null }, function (err) {
+                  // HACK requires _courseId for permissions
+                  app.contentmanager.update('course', { _id: courseId }, { _courseId: courseId, themeSettings: null }, function (err) {
                     if (err) {
                       return next(err);
                     }

@@ -53,19 +53,19 @@ define(function(require){
       this.removeForm();
 
       var selectedTheme = this.getSelectedTheme();
-      var themeHasProperties = selectedTheme.get('properties') && Object.keys(selectedTheme.get('properties')).length > 0;
+      var themeHasProperties = selectedTheme && selectedTheme.get('properties') && Object.keys(selectedTheme.get('properties')).length > 0;
       if(selectedTheme && themeHasProperties) {
         this.form = Origin.scaffold.buildForm({
           model: selectedTheme,
           schemaType: selectedTheme.get('theme')
         });
 
-        var toRestore = Origin.editor.data.course.get('themeSettings') || this.getDefaultThemeSettings();
-        this.restoreFormSettings(toRestore);
-
         this.$('.form-container').html(this.form.el);
         this.$('.theme-customiser').show();
         Origin.trigger('theming:showPresetButton', true);
+
+        var toRestore = Origin.editor.data.course.get('themeSettings') || this.getDefaultThemeSettings();
+        this.restoreFormSettings(toRestore);
       }
     },
 
@@ -113,6 +113,7 @@ define(function(require){
 
     updateThemeSelect: function() {
       var select = this.$('.theme select');
+      var oldVal = select.val();
       // remove options first
       $('option', select).remove();
       // add 'no presets'
@@ -125,6 +126,9 @@ define(function(require){
 
       // disable if no options
       select.attr('disabled', this.themes.models.length === 0);
+
+      // restore the previous value
+      if(oldVal) return select.val(oldVal);
 
       // select current theme
       var selectedTheme = this.getSelectedTheme();
@@ -152,22 +156,24 @@ define(function(require){
         }
         select.attr('disabled', false);
         this.$('button.edit').show();
-        this.$('button.reset').show();
       } else {
         select.attr('disabled', true);
         this.$('button.edit').hide();
-        this.$('button.reset').hide();
       }
+
+      // TODO need to hide reset button if defaults selected
     },
 
     restoreFormSettings: function(toRestore) {
       if(!this.form || !this.form.el) return;
 
       for(var key in toRestore) {
-        var el = $('[name=' + key + ']', this.form.el);
-        el.val(toRestore[key].toString());
-        if(el.hasClass('scaffold-color-picker')) {
-          el.css('background-color', toRestore[key]);
+        var view = this.form.fields[key];
+        if(view.schema.fieldType === 'ColorPicker') {
+          view.setValue(toRestore[key]);
+        }
+        else {
+          view.editor.$el.val(toRestore[key].toString());
         }
       }
     },
@@ -201,7 +207,7 @@ define(function(require){
     * Data persistence
     */
 
-    // checks form for errors, returns true if valid, false otherwise
+    // checks form for errors, returns boolean
     validateForm: function() {
       var selectedTheme = this.getSelectedTheme();
       var selectedPreset = this.getSelectedPreset();
@@ -313,7 +319,9 @@ define(function(require){
       if(presetId) {
         return this.presets.findWhere({ '_id': presetId });
       } else if(includeCached !== false){
-        var parent = this.getSelectedTheme().get('_id');
+        var selectedTheme = this.getSelectedTheme();
+        if(!selectedTheme) return;
+        var parent = selectedTheme.get('_id');
         return this.presets.findWhere({ '_id': this.model.get('_themepreset'), parentTheme: parent });
       }
     },

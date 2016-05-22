@@ -35,22 +35,27 @@ function initialize () {
           if (!results || 1 !== results.length) {
             return res.status(404).json({ success: false, message: 'preset not found' });
           }
-          console.log('Updating preset', presetId);
           // save to config
-          app.contentmanager.update('config', { _courseId: courseId }, { _themepreset: presetId }, function (err) {
-            if (err) return next(err);
-            // lose any previously set theme settings, preset overrides
-            app.contentmanager.update('course', { _id: courseId }, { themeSettings: null }, function (err) {
+          // TODO permissions error here
+          app.contentmanager.retrieve('config', { _courseId: courseId }, function (err, results) {
+            if(err) return next(err);
+            // HACK requires _courseId for permissions
+            app.contentmanager.update('config', { _courseId: courseId }, { _courseId: courseId, _themepreset: presetId }, function (err) {
               if (err) return next(err);
-              // force a rebuild of the course
-              var tenantId = Usermanager.getCurrentUser().tenant._id;
-              if (tenantId) {
-                app.emit('rebuildCourse', tenantId, courseId);
-              } else {
-                // log an error, but don't fail
-                logger.log('error', 'failed to determine current tenant');
-              }
-              return res.status(200).json({ success: true });
+              // lose any previously set theme settings, preset overrides
+              // HACK requires _courseId for permissions
+              app.contentmanager.update('course', { _id: courseId }, { _courseId: courseId, themeSettings: null }, function (err) {
+                if (err) return next(err);
+                // force a rebuild of the course
+                var tenantId = Usermanager.getCurrentUser().tenant._id;
+                if (tenantId) {
+                  app.emit('rebuildCourse', tenantId, courseId);
+                } else {
+                  // log an error, but don't fail
+                  logger.log('error', 'failed to determine current tenant');
+                }
+                return res.status(200).json({ success: true });
+              });
             });
           });
         });
