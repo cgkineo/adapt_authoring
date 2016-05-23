@@ -11,7 +11,9 @@ var server = module.exports = require('express')();
 var winston = require('winston');
 
 var LOG_PATH = path.join(configuration.serverRoot, 'log.json');
-var LOG_EXPIRY = 1000*60*60*24*7; // 1 week
+var LOG_EXPIRY = 1000*60*60*24*2; // 2 days
+
+var firstLog = Date.now();
 
 function initialise() {
   fs.stat(LOG_PATH, function(error, stats) {
@@ -20,10 +22,8 @@ function initialise() {
       else logger.log('error', error);
       return;
     }
-    var logAge = Date.now()-stats.ctime.getTime();
-    if(logAge >= LOG_EXPIRY) fs.unlink(LOG_PATH, addTransport);
-    else addTransport();
-  })
+    fs.unlink(LOG_PATH, addTransport);
+  });
 };
 
 function addTransport() {
@@ -47,6 +47,17 @@ server.get('/log', function (req, res, next) {
       logs: parsedLogs
     });
   });
+});
+
+logger.on('logging', function (transport, level, msg, meta) {
+  if(Date.now()-firstLog >= LOG_EXPIRY) {
+    try {
+      fs.writeFileSync(LOG_PATH);
+      firstLog = Date.now();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 });
 
 initialise();
