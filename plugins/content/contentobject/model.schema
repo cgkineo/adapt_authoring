@@ -111,7 +111,7 @@
         },
         "_headerImage": {
           "type": "object",
-          "title": "Background Image",
+          "title": "Header Image",
           "properties": {
             "_small": {
               "type": "string",
