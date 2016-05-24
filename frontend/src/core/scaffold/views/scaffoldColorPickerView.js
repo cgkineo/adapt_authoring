@@ -34,9 +34,6 @@ define(function(require) {
         },
 
         render: function() {
-            // Listen to remove:views and remove color picker
-            this.listenTo(Origin, 'remove:views', this.removeColorPicker);
-
             if (this.value === null) {
                 this.value = '';
             }
@@ -75,6 +72,11 @@ define(function(require) {
             return this;
         },
 
+        remove: function() {
+            this.removeColorPicker();
+            Backbone.Form.editors.Text.prototype.remove.apply(this, arguments);
+        },
+
         removeColorPicker: function() {
             var colorpickerId = this.$el.data('colorpickerId');
             $("#"+colorpickerId).remove();
@@ -85,6 +87,7 @@ define(function(require) {
 
             this.value = newValue;
             this.$el.css('backgroundColor', this.value);
+            this.$el.ColorPickerSetColor(this.value);
 
             if(this.value) this.$el.siblings('.reset').show();
             else this.$el.siblings('.reset').hide();

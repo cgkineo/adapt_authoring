@@ -85,15 +85,6 @@ define(function(require){
       this.$el.show();
     },
 
-    remove: function() {
-      if(this.form) {
-        // HACK to clean up undefined colorpickers
-        // This removes ALL colorpicker instances........
-        $('.colorpicker').remove();
-      }
-      EditorOriginView.prototype.remove.apply(this, arguments);
-    },
-
     loadCollections: function() {
       this.themes = new ThemeCollection();
       this.listenTo(this.themes, 'sync', this.onCollectionReady);
