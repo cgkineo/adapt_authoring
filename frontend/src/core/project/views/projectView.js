@@ -41,6 +41,18 @@ define(function(require){
       this.model.set('heroImageURI', this.model.getHeroImageURI());
     },
 
+    render: function() {
+      OriginView.prototype.render.apply(this, arguments);
+
+      var userId = Origin.sessionModel.get('id');
+
+      if(this.model.get('createdBy') === userId) {
+        this.$('.overlay').show();
+      } else {
+        this.$('.overlay').hide();
+      }
+    },
+
     openContextMenu: function (e) {
       e.stopPropagation();
       e.preventDefault();

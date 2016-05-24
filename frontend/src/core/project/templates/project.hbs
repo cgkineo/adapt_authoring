@@ -27,6 +27,12 @@
         <div class="project-detail-title">
           <h4 class="project-detail-title-inner">{{{title}}}</h4>
         </div>
+        <i class="fa fa-user overlay"></i>
+
+        <div class="project-details-last-updated project-details-row">
+          <div class="projects-details-label">{{t 'app.lastupdated'}}</div>
+          <div class="projects-details-value">{{momentFormat updatedAt 'ddd D MMM YYYY'}}</div>
+        </div>
 
         <div class="project-details-last-updated project-details-row">
           <div class="projects-details-label">{{t 'app.lastupdated'}}</div>
