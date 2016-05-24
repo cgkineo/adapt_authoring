@@ -32,7 +32,10 @@ function addTransport() {
 
 server.get('/log', function (req, res, next) {
   fs.readFile(LOG_PATH, 'utf8', function(error, data) {
-    if(error) return res.status(500).json(error.toString());
+    if(error) {
+      if(error.code === 'ENOENT') return res.status(200).json({ logs:[] });
+      else return res.status(500).json(error.toString());
+    }
 
     var logs = data.split('\n');
     var parsedLogs = [];

@@ -5,6 +5,10 @@
       <div class="message"><h4>Message</h4></div>
   </div>
   <div class="logs">
+    {{#if logs}}
+    {{else}}
+    There are no logs to show.
+    {{/if}}
     {{#each logs}}
       <div class="log row {{level}}">
           <div class="timestamp">{{momentFormat timestamp "L LTS"}}</div>
