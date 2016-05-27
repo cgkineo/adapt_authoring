@@ -6,7 +6,7 @@ define(function(require){
 
     var helpers = {
         console: function(context) {
-          return console.log(context);
+          return console.log(JSON.stringify(context));
         },
         lowerCase: function(text) {
           return text.toLowerCase();
