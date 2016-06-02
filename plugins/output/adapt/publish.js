@@ -20,6 +20,14 @@ var logger = require('../../../lib/logger');
 exports = module.exports = function Publish(courseId, isPreview, request, response, next) {
   var app = origin();
   var self = this;
+  
+  if(this.isPublishing(courseId)) {
+    return app.on('published', function(courseId, success, data) {
+      if(!success) return next(data);
+      else next(null, data);
+    });
+  }
+  
   var user = usermanager.getCurrentUser(),
     tenantId = user.tenant._id,
     outputJson = {},
@@ -33,6 +41,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
 
   async.series([
       function(callback) {
+        app.emit('publish', courseId);
         self.getCourseJSON(tenantId, courseId, function(err, data) {
           if (err) {
             return callback(err);
@@ -227,6 +236,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         }
       }
     ], function(err) {
+      app.emit('published', courseId, (err) ? false : true, err || resultObject);
       return next(err, resultObject);
     });
 };
