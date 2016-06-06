@@ -88,7 +88,7 @@
             "_isEnabled": {
               "type": "bool",
               "title": "Enable quote-styling?",
-              "default": "",
+              "help": "Applies large quotation marks around the component body text.",
               "inputType": {"type": "Boolean", "options": [true, false]},
               "validators": [],
               "default": false
@@ -98,8 +98,7 @@
               "title": "Quotation marks colour",
               "default": "",
               "inputType": "ColorPicker",
-              "validators": [],
-              "default": ""
+              "validators": []
             }
           }
         }

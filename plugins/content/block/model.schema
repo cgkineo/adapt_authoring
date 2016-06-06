@@ -74,9 +74,10 @@
             "_repeat": {
               "type": "bool",
               "title": "Repeat image",
-              "default": "",
+              "help": "Set this to ‘true’ if using a repeating background image (useful if displaying a pattern or texture rather than a photographic image).",
               "inputType": {"type": "Boolean", "options": [true, false]},
-              "validators": []
+              "validators": [],
+              "default": false
             }
           }
         },
@@ -103,7 +104,8 @@
         "_invertColors": {
           "type": "bool",
           "title": "Invert colours",
-          "default": "",
+          "help": "Setting this to ‘true’ applies the alternative (inverted) theme colours.",
+          "default": false,
           "inputType": {"type": "Boolean", "options": [true, false]},
           "validators": []
         },
