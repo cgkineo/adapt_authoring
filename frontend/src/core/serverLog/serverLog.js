@@ -1,7 +1,8 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
+  var Backbone = require('backbone');
   var Origin = require('coreJS/app/origin');
-  var ServerLogModel = require('coreJS/serverLog/models/serverLogModel');
+  var LogCollection = require('coreJS/serverLog/collections/logCollection');
   var ServerLogView = require('coreJS/serverLog/views/serverLogView');
   var ServerLogSidebarView = require('coreJS/serverLog/views/serverLogSidebarView');
 
@@ -28,8 +29,13 @@ define(function(require) {
       "backButtonText": "Back",
       "backButtonRoute": "/#/dashboard"
     });
-    Origin.router.createView(ServerLogView, {
-      model: new ServerLogModel()
+    var logs = new LogCollection();
+    logs.fetch({
+      success: function() {
+        Origin.router.createView(ServerLogView, {
+          model: new Backbone.Model({ logs: logs })
+        });
+      }
     });
   });
 });

@@ -5,62 +5,47 @@
 var _ = require('underscore');
 var fs = require('fs');
 var configuration = require('../../lib/configuration');
+var database = require('../../lib/database');
 var logger = require('../../lib/logger');
-var path = require('path');
+var origin = require('../../lib/application')();
 var server = module.exports = require('express')();
-var winston = require('winston');
+var winstonMongo = require('winston-mongodb').MongoDB;
 
-var LOG_PATH = path.join(configuration.serverRoot, 'log.json');
-var LOG_EXPIRY = 1000*60*60*24*2; // 2 days
-
-var firstLog = Date.now();
+var COLLECTION_NAME = 'logs';
+var MAX_LOGS = 2048;
 
 function initialise() {
-  fs.stat(LOG_PATH, function(error, stats) {
-    if(error) {
-      if(error.code === 'ENOENT') addTransport();
-      else logger.log('error', error);
-      return;
-    }
-    fs.unlink(LOG_PATH, addTransport);
+  logger.add(winstonMongo, {
+    db: getDb(),
+    collection: COLLECTION_NAME,
+    cappedMax: MAX_LOGS
   });
 };
 
-function addTransport() {
-  logger.add(winston.transports.File, { filename: LOG_PATH });
-}
+function getDb() {
+  var dbString = 'mongodb://';
+
+  var user = configuration.getConfig('dbUser');
+  var pass = configuration.getConfig('dbPass');
+  if(user && pass) {
+    dbString += user + ':' + pass + '@';
+  }
+
+  dbString += configuration.getConfig('dbHost');
+  dbString += ':' + configuration.getConfig('dbPort');
+  dbString += "/" + configuration.getConfig('dbName');
+
+  return dbString;
+};
 
 server.get('/log', function (req, res, next) {
-  fs.readFile(LOG_PATH, 'utf8', function(error, data) {
-    if(error) {
-      if(error.code === 'ENOENT') return res.status(200).json({ logs:[] });
-      else return res.status(500).json(error.toString());
-    }
-
-    var logs = data.split('\n');
-    var parsedLogs = [];
-    _.each(logs, function(item, index) {
-      if(!_.isEmpty(item)) {
-        var logObj = JSON.parse(item);
-        logObj.message = logObj.message.replace(/\[.+\]\s/, ''),
-        parsedLogs.push(logObj);
-      }
-    });
-    return res.json({
-      logs: parsedLogs
+  database.getDatabase(function(error, db) {
+    if(error) return res.status(500).json(error.toString());
+    db.retrieve('log', {}, { limit: 256, jsonOnly: true }, function(error, results) {
+      if(error) return res.status(500).json(error.toString());
+      return res.json(results);
     });
   });
-});
-
-logger.on('logging', function (transport, level, msg, meta) {
-  if(Date.now()-firstLog >= LOG_EXPIRY) {
-    try {
-      fs.writeFileSync(LOG_PATH);
-      firstLog = Date.now();
-    } catch (e) {
-      console.log(e);
-    }
-  }
 });
 
 initialise();
