@@ -396,6 +396,8 @@ define(function(require){
         type: 'error',
         text: window.polyglot.t('app.errorsave')
       });
+      console.log('EditorThemingView.onSaveError:', arguments);
+      
       this.navigateBack();
     },
 
