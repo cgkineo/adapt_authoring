@@ -12,7 +12,8 @@ var server = module.exports = require('express')();
 var winstonMongo = require('winston-mongodb').MongoDB;
 
 var COLLECTION_NAME = 'logs';
-var MAX_LOGS = 2048;
+var MAX_LOGS = 2048; // in DB
+var LOG_LENGTH = 250; // in UI
 
 function initialise() {
   logger.add(winstonMongo, {
@@ -41,7 +42,7 @@ function getDb() {
 server.get('/log', function (req, res, next) {
   database.getDatabase(function(error, db) {
     if(error) return res.status(500).json(error.toString());
-    db.retrieve('log', {}, { limit: 256, jsonOnly: true }, function(error, results) {
+    db.retrieve('log', {}, { limit: LOG_LENGTH, jsonOnly: true }, function(error, results) {
       if(error) return res.status(500).json(error.toString());
       return res.json(results);
     });
