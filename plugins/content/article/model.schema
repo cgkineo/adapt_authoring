@@ -97,7 +97,7 @@
           "type": "bool",
           "title": "Invert colours",
           "help": "Setting this to ‘true’ applies the alternative (inverted) theme colours.",
-          "default": "",
+          "default": false,
           "inputType": {"type": "Boolean", "options": [true, false]},
           "validators": []
         },

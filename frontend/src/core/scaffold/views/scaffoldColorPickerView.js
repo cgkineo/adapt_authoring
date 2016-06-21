@@ -39,16 +39,21 @@ define(function(require) {
             }
 
             _.defer(_.bind(function() {
-                var that = this;
+                var self = this;
                 // Setup colorPicker
                 this.$el.ColorPicker({
-                    color: that.value,
-                    onChange: function (hsb, hex, rgb) {
-                        that.setValue('#' + hex);
-                        that.$el.css('backgroundColor', '#' + hex);
+                    color: self.value,
+                    onSubmit: function (hsb, hex, rgb) {
+                        self.setValue('#' + hex);
                     }
                 });
 
+                /*
+                * HACK change the submit button
+                */
+                $('.colorpicker_submit', this.getColourPicker()).html(window.polyglot.t('app.coloursave'));
+                
+                
                 /*
                 * Append reset button
                 */
@@ -67,7 +72,6 @@ define(function(require) {
                 else {
                     this.$el.siblings('.reset').hide();
                 }
-
             }, this));
             return this;
         },
@@ -78,8 +82,7 @@ define(function(require) {
         },
 
         removeColorPicker: function() {
-            var colorpickerId = this.$el.data('colorpickerId');
-            $("#"+colorpickerId).remove();
+            this.getColourPicker().remove();
         },
 
         setValue: function(newValue) {
@@ -95,6 +98,11 @@ define(function(require) {
 
         resetValue: function() {
             this.setValue('');
+        },
+        
+        getColourPicker: function() {
+            var colorpickerId = this.$el.data('colorpickerId');
+            return $("#" + colorpickerId);
         }
 
     }, {
