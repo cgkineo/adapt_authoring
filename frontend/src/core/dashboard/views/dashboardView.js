@@ -23,6 +23,7 @@ define(function(require){
 
       this.listenTo(Origin, 'window:resize', this.resizeDashboard);
 
+      this.listenTo(Origin, 'dashboard:layout:thumb', this.switchLayoutToThumb);
       this.listenTo(Origin, 'dashboard:layout:grid', this.switchLayoutToGrid);
       this.listenTo(Origin, 'dashboard:layout:list', this.switchLayoutToList);
       // These need to pass in true to re-render the collections
@@ -89,7 +90,7 @@ define(function(require){
     switchLayoutToList: function() {
       var $container = $('.dashboard-projects');
 
-      $container.removeClass('grid-layout').addClass('list-layout');
+      $container.removeClass('grid-layout thumb-layout').addClass('list-layout');
 
       this.setUserPreference('layout','list');
     },
@@ -97,9 +98,15 @@ define(function(require){
     switchLayoutToGrid: function() {
       var $container = $('.dashboard-projects');
 
-      $container.removeClass('list-layout').addClass('grid-layout');
+      $container.removeClass('list-layout thumb-layout').addClass('grid-layout');
 
       this.setUserPreference('layout','grid');
+    },
+
+    switchLayoutToThumb: function() {
+      var $container = $('.dashboard-projects');
+      $container.removeClass('list-layout grid-layout').addClass('thumb-layout');
+      this.setUserPreference('layout','thumb');
     },
 
     sortAscending: function(shouldRenderProjects) {
@@ -156,6 +163,8 @@ define(function(require){
       // Else if nothing is set or is grid view default to grid view
       if (userPreferences && userPreferences.layout === 'list') {
         this.switchLayoutToList();
+      } else if (userPreferences && userPreferences.layout === 'thumb') {
+        this.switchLayoutToThumb();
       } else {
         this.switchLayoutToGrid();
       }
