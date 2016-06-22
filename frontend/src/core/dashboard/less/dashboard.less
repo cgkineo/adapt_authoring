@@ -56,9 +56,15 @@ ul.dashboard-options {
             background-color: #FFF;
             background-color: rgba(255,255,255,0.8);
             margin-top: -100px;
-
             .project-details-inner {
                 padding: 10px;
+            }
+            .overlay {
+                top: 110px;
+                right: 5px;
+                font-size: 32px;
+                color: #3E4960;
+                opacity: 0.4;
             }
         }
         .project-details-tags, .project-details-last-updated {
@@ -67,6 +73,10 @@ ul.dashboard-options {
         &.selected {
             .project-details {
                 background-color: rgba(0,0,0,0.3);
+                .overlay {
+                    color: #fff;
+                    opacity: 0.7;
+                }
             }
         }
     }
