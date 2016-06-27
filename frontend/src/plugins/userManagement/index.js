@@ -15,7 +15,6 @@ define(function(require) {
   };
 
   Origin.on('app:dataReady login:changed', function() {
-    console.log('User Management: app:dataReady login:changed');
   	if (Origin.permissions.hasPermissions(data.featurePermissions)) {
       data.allRoles.on('sync', onDataFetched);
       data.allRoles.url = 'api/role';
