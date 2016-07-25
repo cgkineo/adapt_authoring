@@ -20,14 +20,7 @@ var logger = require('../../../lib/logger');
 exports = module.exports = function Publish(courseId, isPreview, request, response, next) {
   var app = origin();
   var self = this;
-  
-  if(this.isPublishing(courseId)) {
-    return app.on('published', function(courseId, success, data) {
-      if(!success) return next(data);
-      else next(null, data);
-    });
-  }
-  
+
   var user = usermanager.getCurrentUser(),
     tenantId = user.tenant._id,
     outputJson = {},
@@ -54,7 +47,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryThemeName = tenantId + '-' + courseId;
+        var temporaryThemeName = tenantId + '-' + courseId + '-' + user._id;
         var temporaryThemeFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Theme, temporaryThemeName);
 
         self.applyTheme(tenantId, courseId, outputJson, temporaryThemeFolder, function(err, appliedThemeName) {
@@ -94,7 +87,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryThemeName = tenantId + '-' + courseId;
+        var temporaryThemeName = tenantId + '-' + courseId + '-' + user._id;
         var temporaryThemeFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Theme, temporaryThemeName);
 
         self.writeCustomStyle(tenantId, courseId, temporaryThemeFolder, function(err) {
@@ -106,7 +99,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryMenuName = tenantId + '-' + courseId;
+        var temporaryMenuName = tenantId + '-' + courseId + '-' + user._id;
         var temporaryMenuFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Menu, temporaryMenuName);
 
         self.applyMenu(tenantId, courseId, outputJson, temporaryMenuFolder, function(err, appliedMenuName) {
