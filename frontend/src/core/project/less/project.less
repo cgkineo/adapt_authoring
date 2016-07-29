@@ -5,13 +5,12 @@
 
 .project-list-item {
     .overlay {
-        display: none;
         position: absolute;
-        top: 190px;
-        right: 15px;
-        font-size: 64px;
-        color: #0198CE;
-        opacity: 0.1;
+        top: 240px;
+        right: 13px;
+        font-size: 100px;
+        color: rgb(214, 242, 249);
+        opacity: .5;
     }
     position:relative;
     overflow:hidden;
@@ -31,6 +30,10 @@
         color:#fff;
         box-shadow: 0px 0px 5px 2px #CBE1E6;
         background-color: @primary-color;
+        .overlay {
+            color: white;
+            opacity: 0.2;
+        }
         .project-settings {
             top:0%;
             opacity:1;

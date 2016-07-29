@@ -46,7 +46,7 @@ define(function(require){
 
       var userId = Origin.sessionModel.get('id');
 
-      if(this.model.get('createdBy') === userId) {
+      if(this.model.get('createdBy') !== userId) {
         this.$('.overlay').show();
       } else {
         this.$('.overlay').hide();

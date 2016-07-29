@@ -53,29 +53,41 @@ ul.dashboard-options {
             border-right:1px solid #b7caed;
         }
         .project-details {
+            margin-top: -100px;
+            height: 44px;
+            overflow: hidden;
+            word-break: break-word;
             background-color: #FFF;
             background-color: rgba(255,255,255,0.8);
-            margin-top: -100px;
             .project-details-inner {
-                padding: 10px;
+                padding: 5px;
+                h1 {   
+                    color: #177e97;
+                }
             }
             .overlay {
-                top: 110px;
+                top: 90px;
                 right: 5px;
                 font-size: 32px;
-                color: #3E4960;
-                opacity: 0.4;
+                color: #34bee0;
+                opacity: .4;
             }
         }
         .project-details-tags, .project-details-last-updated {
             display: none;
         }
         &.selected {
+            .project-header {
+                border-bottom: 1px solid white;
+            }
             .project-details {
                 background-color: rgba(0,0,0,0.3);
+                h1 {   
+                    color: #fff;
+                }
                 .overlay {
                     color: #fff;
-                    opacity: 0.7;
+                    opacity: 0.5;
                 }
             }
         }
@@ -152,6 +164,10 @@ ul.dashboard-options {
             display:none;
         }
     }
+}
+
+.dashboard-sidebar-import-course {
+    margin-left: 20px !important;
 }
 
 .dashboard-sidebar-filter-input {
