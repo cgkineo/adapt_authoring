@@ -3,19 +3,16 @@
 
     <button class="dashboard-sidebar-add-course action-primary">
     	<span class="dashboard-sidebar-add-course-inner">
-      {{t 'app.addnewproject'}}
+            {{t 'app.addnewproject'}}
     	</span>
     </button>
     {{!TODO make these permissions a bit more specific?}}
     {{#ifHasPermissions "*/*:create,*/*:read,*/*:update,*/*:delete"}}
-    <div class="sidebar-row">
-		<button class="dashboard-sidebar-import-course">
-			<span class="dashboard-sidebar-import-course-inner">
-				<i class="fa fa-upload primary-color"/>
-                {{t "app.importdashboardbutton"}}
-			</span>
-		</button>
-    </div>
+    <button class="dashboard-sidebar-import-course action-secondary">
+        <span class="dashboard-sidebar-import-course-inner">
+            {{t "app.importdashboardbutton"}}
+        </span>
+    </button>
     {{/ifHasPermissions}}
 
 	<div class="separator"></div>
