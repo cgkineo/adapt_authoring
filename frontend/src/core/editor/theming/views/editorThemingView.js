@@ -60,7 +60,13 @@ define(function(require){
           schemaType: selectedTheme.get('theme')
         });
 
-        this.$('.form-container').html(this.form.el);
+        if(this.form) {
+          this.$('.form-container').html(this.form.el);
+          this.$('.empty-message').hide();
+        } else {
+          this.$('.empty-message').show();
+        }
+
         this.$('.theme-customiser').show();
         Origin.trigger('theming:showPresetButton', true);
 
