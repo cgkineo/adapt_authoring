@@ -47,7 +47,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryThemeName = tenantId + '-' + courseId + '-' + user._id;
+        var temporaryThemeName = tenantId + '-' + courseId;
         var temporaryThemeFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Theme, temporaryThemeName);
 
         self.applyTheme(tenantId, courseId, outputJson, temporaryThemeFolder, function(err, appliedThemeName) {
@@ -87,7 +87,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryThemeName = tenantId + '-' + courseId + '-' + user._id;
+        var temporaryThemeName = tenantId + '-' + courseId;
         var temporaryThemeFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Theme, temporaryThemeName);
 
         self.writeCustomStyle(tenantId, courseId, temporaryThemeFolder, function(err) {
@@ -99,7 +99,7 @@ exports = module.exports = function Publish(courseId, isPreview, request, respon
         });
       },
       function(callback) {
-        var temporaryMenuName = tenantId + '-' + courseId + '-' + user._id;
+        var temporaryMenuName = tenantId + '-' + courseId;
         var temporaryMenuFolder = path.join(FRAMEWORK_ROOT_FOLDER, Constants.Folders.Source, Constants.Folders.Menu, temporaryMenuName);
 
         self.applyMenu(tenantId, courseId, outputJson, temporaryMenuFolder, function(err, appliedMenuName) {
