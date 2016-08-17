@@ -1,11 +1,12 @@
 .serverLog {
-    margin: 20px;
-    background-color: rgba(0,0,0,0.8);
+    overflow-y: scroll;
     color: white;
     font-family: monospace;
     font-size: 110%;
     .inner {
+        margin: 20px;
         padding: 20px;
+        background-color: rgba(0,0,0,0.8);
     }
     .row {
         display: block;
@@ -23,9 +24,9 @@
         .message   { width: 90%; word-break: break-all; }
         // log types
         &.error  { color: red; }
-        &.info, 
-        &.debug { 
-            color: #a7bdc1; 
+        &.info,
+        &.debug {
+            color: #a7bdc1;
         }
     }
 
