@@ -4,6 +4,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 **IMPORTANT**: For information on how to *correctly* update your installation, consult [INSTALL.md](https://github.com/adaptlearning/adapt_authoring/blob/master/INSTALL.md#updating-the-tool).
 
+## [0.2.1] - 2016-08-16
+This is a patch release which fixes minor issues with v0.2.0 uncovered by community user testing.
+
+## Added
+- LESS sourcemaps
+
+### Fixed
+- Block drop-zone padding
+- Export button now hidden again for all non-admin users
+- Auto-scrolling while dragging on menu editor and page editor screens
+- Styling of scaffold list items
+- LESS imports now working
+- reset.less now loaded before *everything*
+
 ## [0.2.0] - 2016-07-27
 This version introduces a new look and feel to the user interface of the authoring tool, and closely matches the new theme of the Adapt community site introduced at the beginning of the year.
 
@@ -16,7 +30,7 @@ In addition, this release also includes the following:
 - Caching issue related to course schemas
 - Tag autocomplete mechanism sometimes throws 500 error
 - Form validation
-- Saving course settings hangs if nothing has been changed  
+- Saving course settings hangs if nothing has been changed
 
 ## [0.1.7] - 2016-04-28
 This version contains numerous minor bug fixes and enhamcements, and supports the new menu locking feature released in version 2.0.9 of the Adapt Framework.
@@ -37,7 +51,7 @@ This version contains numerous minor bug fixes and enhamcements, and supports th
 - Autocomplete enabled on text input fields
 - MongoStore does not support replicasets
 - Removed @learningpool.com e-mail address hack
- 
+
 ## [0.1.6] - 2016-03-29
 This version adds the ability to export the source code for a course that can be built using the Adapt Framework. It also fixes some important issues for installing using Vagrant.
 
@@ -85,7 +99,7 @@ This version aligns closely with the re-work on the Adapt Framework v2.0.7 relea
 - Corrected Project Details save issue
 
 ## [0.1.4] - 2015-11-25
-This version adds support for Node.js v4.2.2 LTS.  
+This version adds support for Node.js v4.2.2 LTS.
 
 ### Added
 - Support for Node.js v4.2.2 LTS
@@ -241,6 +255,7 @@ If upgrading from a previous version, please add the following keys to your conf
 - Session cookie security issues
 
 
+[0.2.1]: https://github.com/adaptlearning/adapt_authoring/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/adaptlearning/adapt_authoring/compare/v0.1.7...v0.2.0
 [0.1.7]: https://github.com/adaptlearning/adapt_authoring/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/adaptlearning/adapt_authoring/compare/v0.1.5...v0.1.6

@@ -33,7 +33,8 @@ define(function(require) {
           // Append the parentId value to the container to allow us to move pages, etc.
           this.$el.attr('data-parentId', this._parentId);
         }
-  		},
+        this.setHeight();
+      },
 
       render: function() {
         var data = this.data ? this.data : false;
@@ -49,8 +50,10 @@ define(function(require) {
 
       setHeight: function() {
         var windowHeight = $(window).height();
-        var offsetTop = this.$('.editor-menu-layer-inner').offset().top;
-        this.$('.editor-menu-layer-inner').height(windowHeight-offsetTop);
+        var offsetTop = $('.editor-menu-inner').offset().top;
+        var controlsHeight = this.$('.editor-menu-layer-controls').outerHeight();
+
+        this.$('.editor-menu-layer-inner').height(windowHeight-(offsetTop+controlsHeight));
       },
 
       addMenu: function(event) {

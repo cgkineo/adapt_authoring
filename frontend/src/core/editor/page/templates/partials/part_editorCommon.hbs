@@ -1,9 +1,4 @@
 <div class="sidebar-item-inner">
-{{!--     <div class="sidebar-row sidebar-item-title">
-        <h2 class="sidebar-item-title-inner">
-            Global Settings
-        </h2>
-    </div> --}}
     <button class="editor-common-sidebar-preview action-primary">
         <div class="editor-common-sidebar-preview-progress sidebar-progress"></div>
         <span class="editor-common-sidebar-preview-inner">
@@ -22,6 +17,8 @@
             <i class="fa fa-circle-o-notch fa-spin"></i>{{ t 'app.downloading'}}
         </span>
     </button>
+
+    <div class="separator" />
 
     {{#ifHasPermissions "*/*:create,*/*:read,*/*:update,*/*:delete"}}
     <div class="sidebar-row">
