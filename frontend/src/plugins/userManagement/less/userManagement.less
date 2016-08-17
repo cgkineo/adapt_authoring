@@ -1,8 +1,12 @@
 @import '../../../less/sharedStyles.less';
 
 .userManagement {
-    .form-container-style;
-    max-width: inherit;
+    overflow-y: scroll;
+
+    .container {
+        .form-container-style;
+        max-width: inherit;
+    }
 
     .view-buttons {
         text-align: right;
@@ -62,7 +66,7 @@
         }
         select {
             max-width: 115px;
-            
+
         }
     }
 }

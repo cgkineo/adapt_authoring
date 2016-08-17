@@ -44,8 +44,14 @@ define(function(require){
 
       OriginView.prototype.render.apply(this, arguments);
 
+      this.setHeight();
       this.switchToViewMode();
       this.renderUserViews();
+    },
+
+    setHeight: function() {
+      var newHeight = $(window).height()-$('.'+this.className).offset().top;
+      $('.'+this.className).height(newHeight);
     },
 
     postRender: function() {
