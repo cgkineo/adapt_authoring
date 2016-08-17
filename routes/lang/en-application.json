@@ -26,6 +26,8 @@
   "app.editmodebutton": "Switch to edit mode",
   "app.viewmodebutton": "Switch to view mode",
   "app.changeadminaccounts": "Please log in as another admin for full access.",
+  "app.failedlogins": "Failed logins",
+  "app.lastaccess": "Last access",
   "app.addnewuser": "Add new user",
   "app.adduserformtitle": "New user account details",
   "app.usernameoremail": "E-mail address",
