@@ -86,8 +86,7 @@
       <div class="col-15">
         <div class="tb-col-inner">
           <div class="edit-mode">
-            {{!TODO lang string}}
-            Please log in as another admin to modify your own account.
+            {{t 'app.changeadminaccounts'}}
           </div>
         </div>
       </div>
@@ -96,12 +95,12 @@
         <div class="tb-col-inner">
           <div class="buttons edit-mode">
             {{#if _isDeleted}}
-              <button class="btn alert edit-input delete">Delete user</button>
-              <button class="btn action-primary restore">Restore user</button>
+              <button class="btn alert edit-input delete">{{t 'app.deleteuser'}}</button>
+              <button class="btn action-primary restore">{{t 'app.restoreuser'}}</button>
             {{else}}
               {{!TODO reset password <button class="btn btn-primary edit-input resetPassword">Reset password<i class="fa fa-envelope"></i></button>}}
-              <button class="btn action-primary changePassword">Change password</button>
-              <button class="btn alert disable">Disable user</button>
+              <button class="btn action-primary changePassword">{{t 'app.resetpassword'}}</button>
+              <button class="btn alert disable">{{t 'app.disableuser'}}</button>
             {{/if}}
           </div>
         </div>

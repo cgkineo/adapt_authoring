@@ -22,7 +22,7 @@ define(function(require){
     initialize: function() {
       OriginView.prototype.initialize.apply(this, arguments);
 
-      Origin.trigger('location:title:update', { title: "All users" });
+      Origin.trigger('location:title:update', { title: window.polyglot.t('app.usermanagementtitle') });
       this.initData();
     },
 
