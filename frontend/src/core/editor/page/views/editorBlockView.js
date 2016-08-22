@@ -175,6 +175,9 @@ define(function(require){
 
     setupDragDrop: function() {
       var view = this;
+      var autoScrollTimer = false;
+      var $container = $('.page');
+
       this.$el.draggable({
         opacity: 0.8,
         handle: '.handle',
@@ -201,8 +204,33 @@ define(function(require){
           // Using the initial offset we're able to position the window back in place
           $(window).scrollTop(view.$el.offset().top -view.offsetTopFromWindow);
         },
+        drag: function(event) {
+          window.clearInterval(autoScrollTimer);
+
+          var SCROLL_THRESHOLD = $container.height()*0.2;
+          var SCROLL_INCREMENT = 7;
+
+          var offsetTop = $container.offset().top;
+          var clientY = event.originalEvent.clientY;
+          var scrollAmount;
+
+          if (clientY < (offsetTop+SCROLL_THRESHOLD)) {
+            scrollAmount = -SCROLL_INCREMENT;
+          }
+          else if (clientY > (($container.height()+offsetTop) - SCROLL_THRESHOLD)) {
+            scrollAmount = SCROLL_INCREMENT;
+          }
+
+          if(scrollAmount) {
+            autoScrollTimer = window.setInterval(function() {
+              $container.scrollTop($container.scrollTop()+scrollAmount);
+            }, 10);
+          }
+        },
         stop: function () {
+          window.clearInterval(autoScrollTimer);
           view.hideDropZones();
+          $container.scrollTop($(this).offset().top*-1);
         }
       });
     },
@@ -211,6 +239,8 @@ define(function(require){
       this.$('.page-components').empty();
       var components = this.model.getChildren();
       var addPasteZonesFirst = components.length && components.at(0).get('_layout') != 'full';
+
+      this.addComponentButtonLayout(components);
 
       if (addPasteZonesFirst) {
         this.setupPasteZones();
@@ -224,6 +254,20 @@ define(function(require){
       if (!addPasteZonesFirst) {
         this.setupPasteZones();
       }
+    },
+
+    addComponentButtonLayout: function(components){
+        if(components.length == 2) return;
+        else if (components.length == 0){
+            this.$('.add-component').addClass('full');
+            return;
+        }
+        else {
+          if(components.models[0].attributes._layout == 'left')
+            this.$('.add-component').addClass('right');
+          else
+            this.$('.add-component').addClass('left');  
+        }
     },
 
     loadBlockEdit: function (event) {

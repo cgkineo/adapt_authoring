@@ -153,14 +153,6 @@ define(function(require){
         var itemWidth = $menuLayers.first().outerWidth(true);
         // Set menu holder to width by items length
         $('.editor-menu-inner').width(itemWidth * $menuLayers.length);
-
-        // Set editor menu container to height of available space
-        // Get offset to work out space menu is set inside
-        var menuOffsetTop = this.$el.offset().top;
-        // Set height
-        this.$el.height(windowHeight - menuOffsetTop);
-        this.$('.editor-menu-layer').height(windowHeight - menuOffsetTop - $menuControls.height());
-
     },
 
     scrollToElement: function() {
@@ -176,6 +168,7 @@ define(function(require){
     setupDragDrop: function() {
       var view = this;
       $(".editor-menu-layer-inner").sortable({
+        containment: '.editor-menu',
         appendTo: '.editor-menu',
         items: '.editor-menu-item',
         handle: '.handle',
@@ -190,11 +183,18 @@ define(function(require){
 
           // Find the model
           var currentModel = Origin.editor.data.contentObjects.findWhere({_id: id});
-          
+
           // Save just the new attributes and patch them
           currentModel.save({_sortOrder: sortOrder, _parentId: parentId}, {patch: true});
+
+          currentModel.set('_isDragging', false);
+
         },
         over: function(event, ui) {
+          $(event.target).closest('.editor-menu-layer').attr('data-over', true);
+        },
+        out: function(event, ui) {
+          $(event.target).closest('.editor-menu-layer').attr('data-over', false);
         },
         receive: function(event, ui) {
           if (ui.item.hasClass('content-type-menu')) {

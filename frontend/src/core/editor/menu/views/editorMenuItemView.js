@@ -10,10 +10,13 @@ define(function(require){
 
     className: "editor-menu-item",
 
+    autoScrollTimer: false,
+
     events: {
         'click .editor-menu-item-inner'       : 'onMenuItemClicked',
         'click a.open-context-contentObject'  : 'openContextMenu',
-        'click a.contentObject-delete'        : 'deleteItemPrompt'
+        'click a.contentObject-delete'        : 'deleteItemPrompt',
+        'mousedown .handle'                   : 'enableDrag'
     },
 
     preRender: function() {
@@ -22,11 +25,21 @@ define(function(require){
     },
 
     postRender: function() {
+      // setup drag
+      this.$el.closest('.editor-menu').on('mousemove', _.bind(this.handleDrag, this));
+
       // Check if the current item is expanded and update the next menuLayerView
       // This can end up being recursive if an item is selected inside a few menu items
       if (this.model.get('_isExpanded')) {
         Origin.trigger('editorView:menuView:updateSelectedItem', this);
       }
+    },
+
+    remove: function() {
+      this.$el.closest('.editor-menu-layer').off('mousemove');
+
+      // Call original remove
+      EditorOriginView.prototype.remove.apply(this, arguments);
     },
 
     setupEvents: function() {
@@ -89,19 +102,42 @@ define(function(require){
         // Only if the current double clicked it is a page item
         if (this.model.get('_type') == 'page') {
           this.gotoPageEditor();
+        } else if (this.model.get('_type') == 'menu') {
+          this.gotoSubMenuEditor();
         }
         this.model.set('clicks', 0);
       }
 
     },
 
+    selectedLevel: function() {
+      $(".editor-menu-layer").each(function() {
+        if($(this).hasClass("selected")){
+            $(this).removeClass("selected");
+        }
+      });
+
+      if($(this.el).hasClass("content-type-menu")) {
+        $(this.el).parent().parent().next().addClass("selected");
+      }
+      else {
+        $(this.el).parent().parent().addClass("selected");
+      }
+      event && event.preventDefault();
+    },
+
     onMenuItemDblClicked: function(event) {
-      event.preventDefault();
+      event && event.preventDefault();
     },
 
     gotoPageEditor: function() {
       Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/page/' + this.model.get('_id'));
     },
+
+
+   gotoSubMenuEditor: function() {
+     Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/menu/' + this.model.get('_id') + '/edit');
+   },
 
     setItemAsSelected: function() {
 
@@ -127,6 +163,8 @@ define(function(require){
       // This event passes out the view to the editorMenuView to add
       // a editorMenuLayerView and setup this.subView
       Origin.trigger('editorView:menuView:updateSelectedItem', this);
+
+      this.selectedLevel();
 
     },
 
@@ -180,7 +218,7 @@ define(function(require){
       var courseId = Origin.editor.data.course.get('_id');
       var type = this.model.get('_type');
       var menuItemId = this.model.get('_id');
-      
+
       Origin.router.navigate('#/editor/'
         + courseId
         + '/'
@@ -191,9 +229,7 @@ define(function(require){
     },
 
     deleteItemPrompt: function(event) {
-      if (event) {
-        event.preventDefault();
-      }
+      event && event.preventDefault();
 
       this.listenToOnce(Origin, 'editorView:removeItem:'+ this.model.get('_id'), this.deleteItem);
       this.listenToOnce(Origin, 'editorView:cancelRemoveItem:'+ this.model.get('_id'), this.cancelDeleteItem);
@@ -222,13 +258,14 @@ define(function(require){
 
     copyMenuItem: function() {
       $('.paste-zone').addClass('show');
+      $('.add-zone').css('visibility','hidden');
       Origin.trigger('editorView:copy', this.model);
     },
 
     copyID: function() {
       Origin.trigger('editorView:copyID', this.model);
     },
-    
+
     deleteItem: function(event) {
       this.stopListening(Origin, 'editorView:cancelRemoveItem:'+ this.model.get('_id'), this.cancelDeleteItem);
       this.model.set({_isExpanded:false, _isSelected: false});
@@ -248,6 +285,45 @@ define(function(require){
     cancelDeleteItem: function() {
       this.stopListening(Origin, 'editorView:removeItem:'+ this.model.get('_id'), this.deleteItem);
       this.model.set({_isSelected: true});
+    },
+
+    enableDrag: function(event) {
+      this.model.set('_isDragging', true);
+    },
+
+    handleDrag: function(event) {
+      window.clearInterval(this.autoScrollTimer);
+      this.autoScrollTimer = false;
+
+      if(!this.model.get('_isDragging')) {
+        return;
+      }
+
+      var $currentLayer = $(".editor-menu-layer[data-over='true'] > .editor-menu-layer-inner");
+
+      if(!$currentLayer.length) {
+        return;
+      }
+
+      this.autoScrollTimer = window.setInterval(function() {
+        var SCROLL_THRESHOLD = $currentLayer.height()*0.2;
+        var SCROLL_INCREMENT = 4;
+
+        var offsetTop = $currentLayer.offset().top;
+        var clientY = event.clientY;
+        var scrollAmount;
+
+        if (clientY < (offsetTop+SCROLL_THRESHOLD)) {
+          scrollAmount = -SCROLL_INCREMENT;
+        }
+        else if (clientY > (($currentLayer.height()+offsetTop) - SCROLL_THRESHOLD)) {
+          scrollAmount = SCROLL_INCREMENT;
+        }
+
+        if(scrollAmount) {
+          $currentLayer.scrollTop($currentLayer.scrollTop()+scrollAmount);
+        }
+      }, 10);
     }
 
   }, {

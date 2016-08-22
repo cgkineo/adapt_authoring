@@ -7,8 +7,15 @@ define(function(require){
     className: 'serverLog',
 
     postRender: function() {
+      this.setHeight();
       this.setViewToReady();
+    },
+
+    setHeight: function() {
+      var newHeight = $(window).height()-$('.' + this.className).offset().top;
+      $('.' + this.className).height(newHeight);
     }
+
   }, {
     template: 'serverLog'
   });

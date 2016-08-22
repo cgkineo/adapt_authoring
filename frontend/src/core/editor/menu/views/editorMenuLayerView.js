@@ -33,17 +33,27 @@ define(function(require) {
           // Append the parentId value to the container to allow us to move pages, etc.
           this.$el.attr('data-parentId', this._parentId);
         }
-  		},
+        this.setHeight();
+      },
 
       render: function() {
         var data = this.data ? this.data : false;
         var template = Handlebars.templates[this.constructor.template];
         this.$el.html(template(data));
         _.defer(_.bind(function() {
+          this.setHeight();
           this.postRender();
         }, this));
 
         return this;
+      },
+
+      setHeight: function() {
+        var windowHeight = $(window).height();
+        var offsetTop = $('.editor-menu-inner').offset().top;
+        var controlsHeight = this.$('.editor-menu-layer-controls').outerHeight();
+
+        this.$('.editor-menu-layer-inner').height(windowHeight-(offsetTop+controlsHeight));
       },
 
       addMenu: function(event) {
@@ -81,7 +91,6 @@ define(function(require) {
         // Save the model
         newMenuItemModel.save(null, {
           error: function(error) {
-            console.log(arguments);
             // If there's an error show the menu item fading out
             // and show an unobtrusive pop notification
             var timeOut = 3000;
@@ -108,6 +117,8 @@ define(function(require) {
             } else {
               newMenuItemView.$el.removeClass('syncing').addClass('synced');
             }
+
+            this.setHeight();
 
           }, this)
         });
@@ -186,6 +197,7 @@ define(function(require) {
 
       cancelPasteMenuItem: function(event) {
         event.preventDefault();
+        $('.add-zone').css('visibility','visible');
         var parentId = this._parentId;
         var target = new EditorContentObjectModel({
           _parentId: parentId,

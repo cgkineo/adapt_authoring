@@ -265,10 +265,11 @@ define(['jquery', 'underscore', 'backbone', 'backboneForms'], function($, _, Bac
   }, {
 
     //STATICS
+    // TODO remove this horrible code and externalise
     template: _.template('\
       <div class="list-items">\
         <div data-items></div>\
-        <button class="btn btn-primary" type="button" data-action="add">Add</button>\
+        <button class="btn primary" type="button" data-action="add">Add</button>\
       </div>\
     ', null, Form.templateSettings)
 
@@ -401,10 +402,11 @@ define(['jquery', 'underscore', 'backbone', 'backboneForms'], function($, _, Bac
   }, {
 
     //STATICS
+    // TODO remove this horrible code and externalise
     template: _.template('\
       <div class="list-item clearfix">\
         <span data-editor></span>\
-        <button class="btn btn-warning" type="button" data-action="remove">&times;</button>\
+        <button class="btn warning" type="button" data-action="remove">&times;</button>\
       </div>\
     ', null, Form.templateSettings),
 
