@@ -25,10 +25,7 @@ define(function(require) {
 
   Origin.on('router:serverLog', function(location, subLocation, action) {
     Origin.trigger('location:title:update', { title: 'Server Log' });
-    Origin.sidebar.addView(new ServerLogSidebarView().$el, {
-      "backButtonText": "Back",
-      "backButtonRoute": "/#/dashboard"
-    });
+    Origin.sidebar.addView(new ServerLogSidebarView().$el);
     var logs = new LogCollection();
     logs.fetch({
       success: function() {
