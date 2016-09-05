@@ -4,11 +4,11 @@
       <div class="message"><h4>Message</h4></div>
   </div>
   <div class="logs">
-    {{#if logs}}
+    {{#if logsToRender}}
     {{else}}
     There are no logs to show.
     {{/if}}
-    {{#each logs.models}}
+    {{#each logsToRender}}
       <div class="log row {{attributes.level}}">
           <div class="level">{{attributes.level}}</div>
           <div class="message">{{attributes.message}}</div>
