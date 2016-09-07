@@ -42,8 +42,8 @@ define(function(require) {
     if (!Origin.permissions.hasPermissions(data.featurePermissions)) {
       Origin.Notify.alert({
         type: 'warning',
-        title: "No tresspassing",
-        text: "You aren't authorised to view this area."
+        title: window.polyglot.t('app.notauthorisedtitle'),
+        text: window.polyglot.t('app.notauthorisedmessage')
       });
       Origin.router.navigate('#/dashboard');
       return;
