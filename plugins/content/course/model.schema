@@ -592,7 +592,9 @@
       "type": "object"
     },
     "menuSettings": {
-      "type": "object"
+      "type": "object",
+      "isSetting": true,
+      "title": "Menu"
     },
     "_lockType": {
       "type": "string",

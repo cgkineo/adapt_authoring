@@ -140,6 +140,11 @@
           }
         }
       }
+    },
+    "menuSettings": {
+      "type": "object",
+      "isSetting": true,
+      "title": "Menu"
     }
   }
 }
