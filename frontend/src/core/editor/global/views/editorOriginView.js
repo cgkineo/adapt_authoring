@@ -202,10 +202,11 @@ define(function(require){
     },
 
     onSaveSuccess: function() {
+      var self = this;
       Origin.trigger('editingOverlay:views:hide');
       Origin.trigger('editor:refreshData', function() {
+        self.remove();
         Backbone.history.history.back();
-        this.remove();
       }, this);
     }
   });
