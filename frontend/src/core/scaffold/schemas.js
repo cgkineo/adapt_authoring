@@ -16,6 +16,8 @@ define(function(require) {
                 enabledExtensionsKeys.push(value.targetAttribute);
             });
 
+
+
             // Get the schema
             var schema = JSON.parse(JSON.stringify(Origin.schemas.get(schemaName)));
             // Compare the enabledExtensions against the current schemas
