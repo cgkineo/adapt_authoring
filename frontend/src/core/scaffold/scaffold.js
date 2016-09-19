@@ -209,20 +209,24 @@ define(function(require) {
 		// Setup default fieldsets
 		var fieldsets = {
 			general: {
+				id: 'general',
 				legend: 'General',
 				fields: []
 			},
 			// ::TODO
 			// I want to remove this please
 			properties: {
+				id: 'properties',
 				legend: 'Properties',
 				fields: []
-			}, 
+			},
 			settings :{
+				id: 'settings',
 				legend: 'Settings',
 				fields: []
 			},
 			extensions: {
+				id: 'extensions',
 				legend: 'Extensions',
 				fields: ['_extensions']
 			}

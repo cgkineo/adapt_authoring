@@ -51,6 +51,14 @@ define(function(require) {
 
                 }
 
+                // TODO we only support one menu right now...
+                var appliedMenus = [ configModel.get('_menu') ];
+                _.each(schema.menuSettings.properties, function(value, key) {
+                    if (!_.contains(appliedMenus, key)) {
+                        delete schema.menuSettings.properties[key];
+                    }
+                });
+
                 // trim off the empty globals objects
                 _.each(schema._globals.properties, function(value, key) {
                     if(_.isEmpty(value.properties)) {
