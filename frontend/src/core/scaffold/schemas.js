@@ -56,7 +56,7 @@ define(function(require) {
                 // TODO we only support one menu right now...
                 var appliedMenus = [ configModel.get('_menu') ];
                 _.each(schema.menuSettings.properties, function(value, key) {
-                    if (!_.contains(appliedMenus, key)) {
+                    if (!_.contains(appliedMenus, value.name)) {
                         delete schema.menuSettings.properties[key];
                     }
                 });
