@@ -53,7 +53,7 @@ define(function(require) {
         },
         success: function (jqXHR, textStatus, errorThrown) {
           if (jqXHR.success) {
-            Origin.router.navigate('#/dashboard', {trigger: true});
+            Origin.router.navigateToDashboard();
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {

@@ -56,15 +56,15 @@ define(function(require) {
         },
 
         addCourse: function() {
-            Origin.router.navigate('#/project/new', {trigger:true});
+            Origin.router.navigateTo('project/new');
         },
 
         gotoMyCourses: function() {
-            Origin.router.navigate('#/dashboard', {trigger: true});
+            Origin.router.navigateToDashboard();
         },
 
         gotoSharedCourses: function() {
-            Origin.router.navigate('#/dashboard/shared', {trigger: true});
+            Origin.router.navigateTo('dashboard/shared');
         },
 
         filterProjectsByTitle: function(event, filter) {

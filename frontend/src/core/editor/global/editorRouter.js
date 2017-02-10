@@ -63,6 +63,15 @@ define(function(require) {
 
   function route(location) {
     loc = location
+
+    var course = Origin.editor.data.course;
+    var sharing = course.get('_sharing');
+
+    var isMyCourse = course.get('createdBy') === Origin.sessionModel.get('id');
+    if(isMyCourse && !sharing._isEditable || !isMyCourse && !sharing._isEditableByOthers) {
+      return Origin.trigger('router:denyAccess');
+    }
+
     switch (loc.type) {
       case 'article':
         if (loc.action === 'edit') {
@@ -344,7 +353,7 @@ define(function(require) {
         });
         Origin.sidebar.addView(new EditorMenuSidebarView().$el, {
           "backButtonText": "Back to courses",
-          "backButtonRoute": Origin.dashboardRoute || '/#/dashboard'
+          "backButtonRoute": '/#/dashboard'
         });
       }
     });

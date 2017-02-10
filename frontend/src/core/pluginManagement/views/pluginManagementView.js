@@ -135,7 +135,7 @@ define(function(require){
         // Refresh the schemas
         Origin.trigger('scaffold:updateSchemas', function() {
           // regardless of the result, refresh the view
-          Origin.router.navigate('#/pluginManagement/' + pluginType, {trigger: true});
+          Origin.router.navigateTo('pluginManagement/' + pluginType);
         }, this);
       });
 

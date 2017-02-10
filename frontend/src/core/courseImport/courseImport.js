@@ -5,7 +5,7 @@ define(function(require) {
   var CourseImportSidebarView = require('./views/courseImportSidebarView');
 
   Origin.on('globalMenu:courseImport:open', function() {
-    Origin.router.navigate('#/courseImport', { trigger: true });
+    Origin.router.navigateTo('courseImport');
   });
 
   Origin.on('app:dataReady login:changed', function() {

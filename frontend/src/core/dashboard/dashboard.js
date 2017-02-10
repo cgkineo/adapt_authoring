@@ -99,7 +99,7 @@ define(function(require) {
   });
 
   Origin.on('globalMenu:dashboard:open', function() {
-    Origin.router.navigate('#/dashboard', { trigger: true });
+    Origin.router.navigateToDashboard();
   });
 
   Origin.on('app:dataReady login:changed', function() {

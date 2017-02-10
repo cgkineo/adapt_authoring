@@ -111,8 +111,8 @@ define(function(require){
     addBlock: function(event) {
       if (event) {
         event.preventDefault();
-      } 
-      
+      }
+
       var self = this;
       var layoutOptions = [
         {
@@ -203,13 +203,7 @@ define(function(require){
       var courseId = Origin.editor.data.course.get('_id');
       var type = this.model.get('_type');
       var Id = this.model.get('_id');
-      Origin.router.navigate('#/editor/'
-        + courseId
-        + '/'
-        + type
-        + '/'
-        + Id
-        + '/edit', {trigger: true});
+      Origin.router.navigateTo('editor/' + courseId + '/' + type + '/' + Id + '/edit');
     },
 
     setupDragDrop: function() {
@@ -252,7 +246,7 @@ define(function(require){
           var SCROLL_INCREMENT = 7;
 
           var offsetTop = $container.offset().top;
-          var clientY = event.originalEvent.clientY; 
+          var clientY = event.originalEvent.clientY;
           var scrollAmount;
 
           if (clientY < (offsetTop+SCROLL_THRESHOLD)) {

@@ -2,7 +2,6 @@
 define(function(require) {
   var Backbone = require('backbone');
   var Origin = require('coreJS/app/origin');
-  var PermissionsView = require('coreJS/app/views/permissionsView');
 
   var Router = Backbone.Router.extend({
     routes: {
@@ -12,113 +11,97 @@ define(function(require) {
     },
 
     initialize: function() {
-      // Setup listeners for the loading screen
+      this.$loading = $('.loading');
+      this.addListeners();
+    },
+
+    addListeners: function() {
       Origin.on('router:hideLoading', this.hideLoading, this);
       Origin.on('router:showLoading', this.showLoading, this);
-      // Store loading element
-      this.$loading = $('.loading');
 
-      this.locationKeys = ['module', 'route1', 'route2', 'route3', 'route4'];
+      Origin.on('router:denyAccess', this.denyAccess, this);
     },
 
-    isUserAuthenticated: function() {
-      return Origin.sessionModel.get('isAuthenticated') ? true : false;
+    isUserAuthd: function() {
+      return Origin.sessionModel.get('isAuthenticated');
     },
 
-    redirectToLogin: function() {
-      this.navigate('#/user/login', {trigger: true});
+    denyAccess: function() {
+      // TODO localise
+      Origin.Notify.alert({
+        type: 'error',
+        text: 'You don\'t have permission to access this area.',
+        callback: this.navigateToDashboard.bind(this)
+      });
     },
 
-    createView: function(View, viewOptions, settings) {
-      var viewOptions = (viewOptions || {});
-      var settings = (settings || {});
-      var currentView;
+    navigateTo: function(route, options) {
+      options = options || { trigger: true };
+      this.navigate('#/' + route, options);
+    },
 
-      if (this.isUserAuthenticated()) {
-        currentView = new View(viewOptions);
-      } else {
-        if (settings.authenticate === false) {
-          currentView = new View(viewOptions);
-        } else {
-          return this.redirectToLogin();
-        }
-      }
-      $('.app-inner').append(currentView.$el);
+    navigateToLogin: function() {
+      this.navigateTo('user/login');
+    },
+
+    navigateToDashboard: function() {
+      this.navigateTo('dashboard');
     },
 
     handleIndex: function() {
-      // Show loading on any route
       this.showLoading();
-      // console.log('in handleIndex');
-      if (this.isUserAuthenticated()) {
-        this.navigate('#/dashboard', {trigger: true});
-      } else {
-        return this.redirectToLogin();
-      }
-    },
-
-    // Persist any dashboard routing for 'Back to courses' link
-    evaluateDashboardRoute: function() {
-      if (Origin.location && Origin.location.module == 'dashboard') {
-        var suffix = Origin.location.route1
-          ? '/' + Origin.location.route1
-          : '';
-        Origin.dashboardRoute = '/#/dashboard' + suffix;
-      }
+      this.isUserAuthd() ? this.navigateToDashboard() : this.navigateToLogin();
     },
 
     handleRoute: function(module, route1, route2, route3, route4) {
-      // Show loading on any route
       this.showLoading();
-      // Remove views
       this.removeViews();
-      // Check this user has permissions
+
       if (!Origin.permissions.checkRoute(Backbone.history.fragment)) {
-        Origin.trigger('sidebar:sidebarContainer:hide');
-        Origin.trigger('location:title:hide');
-        return $('.app-inner').append(new PermissionsView().$el);
+        return this.denyAccess();
       }
-      // Verify the user is authenticated
-      if (!this.isUserAuthenticated()  && (module !== 'user' && route1 !== 'login')) {
+      if (!this.isUserAuthd() && (module !== 'user' && route1 !== 'login')) {
+        this.navigateToLogin();
         Origin.Notify.alert({
           type: 'error',
           text: window.polyglot.t('app.errorsessionexpired')
         });
-        return this.redirectToLogin();
+        return;
       }
+      this.updateCurrentLocation(arguments);
 
-      var routeArguments = arguments;
-      // Set previous location object
+      Origin.trigger('router:' + module, route1, route2, route3, route4);
+    },
+
+    updateCurrentLocation: function(routeArguments) {
       Origin.previousLocation = Origin.location;
-      this.evaluateDashboardRoute();
-      // Set location object
+
       Origin.location = {};
-      _.each(this.locationKeys, function(locationKey, index) {
+      _.each(['module', 'route1', 'route2', 'route3', 'route4'], function(locationKey, index) {
         Origin.location[locationKey] = routeArguments[index];
       });
-      // Trigger location change
-      Origin.trigger('location:change', Origin.location);
 
+      this.addLocationClasses();
+
+      Origin.trigger('location:change', Origin.location);
+    },
+
+    /**
+    * View stuff
+    */
+
+    addLocationClasses: function() {
       var locationClass = 'module-' + Origin.location.module;
       if (Origin.location.route1) {
         locationClass += ' location-' + Origin.location.route1
       }
       $('body').removeClass().addClass(locationClass);
-      // Trigger router event
-      Origin.trigger('router:' + module, route1, route2, route3, route4);
-    },
-
-    removeViews: function() {
-      Origin.trigger('remove:views');
     },
 
     showLoading: function(shouldHideTopBar) {
+      this.$loading.removeClass('display-none fade-out');
       // Sometimes you might want to disable the top bar too
-      if (shouldHideTopBar) {
-        this.$loading.removeClass('display-none fade-out').addClass('cover-top-bar');
-      } else {
-        this.$loading.removeClass('display-none fade-out');
-      }
+      if(shouldHideTopBar) this.$loading.addClass('cover-top-bar');
     },
 
     hideLoading: function() {
@@ -126,7 +109,22 @@ define(function(require) {
       _.delay(_.bind(function() {
         this.$loading.addClass('display-none').removeClass('cover-top-bar');
       }, this), 300);
-    }
+    },
+
+    createView: function(View, viewOptions, settings) {
+      var viewOptions = (viewOptions || {});
+      var settings = (settings || {});
+
+      if (!this.isUserAuthd() && settings.authenticate !== false) {
+        return this.navigateToLogin();
+      }
+
+      $('.app-inner').append(new View(viewOptions).$el);
+    },
+
+    removeViews: function() {
+      Origin.trigger('remove:views');
+    },
   });
 
   return Router;

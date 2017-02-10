@@ -154,7 +154,7 @@ define(function(require){
     },
 
     onUploadSaveSuccess: function() {
-      Origin.router.navigate('#/assetManagement', { trigger:true });
+      Origin.router.navigateTo('assetManagement');
     },
 
     onUploadSaveError: function() {
@@ -180,7 +180,7 @@ define(function(require){
         this.model.set({ _id: data._id });
       }
       Origin.trigger('assets:update', data);
-      Origin.router.navigate('#/assetManagement', { trigger:true });
+      Origin.router.navigateTo('assetManagement');
     },
 
     onFileUploadError: function(xhr, status, error) {

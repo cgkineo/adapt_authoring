@@ -23,7 +23,7 @@ define(function(require) {
   });
 
   Origin.on('globalMenu:assetManagement:open', function() {
-    Origin.router.navigate('#/assetManagement', { trigger: true });
+    Origin.router.navigateTo('assetManagement');
   });
 
   Origin.on('router:assetManagement', function(location, subLocation, action) {

@@ -46,7 +46,7 @@ define(function(require){
             title: 'Import error',
             text: data.responseJSON && data.responseJSON.message || data.statusText
           });
-          Origin.router.navigate('#/dashboard', { trigger: true });
+          Origin.router.navigateToDashboard();
         },
         success: function(data, status, xhr) {
           Origin.Notify.alert({
@@ -54,7 +54,7 @@ define(function(require){
             title: 'Import successful',
             text: data.message
           });
-          Origin.router.navigate('#/dashboard', { trigger: true });
+          Origin.router.navigateToDashboard();
         }
       });
 
@@ -95,7 +95,7 @@ define(function(require){
       // change upload button label
       this.$('label[for=file] .btn-label').html(title);
       this.$('label[for=file]').removeClass('validation-error').addClass('selected');
-    },
+    }
   }, {
     template: 'courseImport'
   });

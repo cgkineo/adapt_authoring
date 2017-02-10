@@ -176,22 +176,23 @@ define(function(require){
 
     loadPageEdit: function(event) {
       event && event.preventDefault();
-       var route = '#/editor/' + this.model.get('_courseId') + '/page/' + this.model.get('_id') + '/edit';
-       Origin.router.navigate(route);
+      var courseId = this.model.get('_courseId');
+      var id = this.model.get('_id');
+      Origin.router.navigateTo('editor/' + courseId + '/page/' + id + '/edit');
     },
 
-    // TODO fragile HACK, refactor context menu code to allow what I want to do later... 
+    // TODO fragile HACK, refactor context menu code to allow what I want to do later...
     openContextMenu: function(event) {
       if(!event) return console.log('Error: needs a current target to attach the menu to...');
-      
+
       event.preventDefault();
       event.stopPropagation();
- 
+
       var fakeView = new Backbone.View({
-        model: new Backbone.Model({ _type: 'page-min' }) 
+        model: new Backbone.Model({ _type: 'page-min' })
       });
 
-      
+
       this.listenTo(fakeView, {
         'contextMenu:page-min:edit': this.loadPageEdit,
         'contextMenu:page-min:copyID': this.onCopyID
