@@ -3,9 +3,8 @@ define(function(require) {
   var Origin = require('coreJS/app/origin');
   var CoursesView = require('coreJS/courses/views/coursesView');
   var CoursesSidebarView = require('coreJS/courses/views/coursesSidebarView');
+  var ProjectModel = require('coreJS/project/models/projectModel');
   var ProjectCollection = require('coreJS/project/collections/ProjectCollection');
-  var MyProjectCollection = require('coreJS/project/collections/myProjectCollection');
-  var SharedProjectCollection = require('coreJS/project/collections/sharedProjectCollection');
   var TagsCollection = require('coreJS/tags/collections/tagsCollection');
 
   Origin.on('router:courses', onRouterCourses);
@@ -27,11 +26,12 @@ define(function(require) {
   function onNewSession() {
     Origin.globalMenu.addItem({
       "location": "global",
-      "text": "Courses",
+      "text": window.polyglot.t('app.courses'),
       "icon": "fa-book",
       "callbackEvent": "courses:open",
       "sortOrder": 1
     });
+    Origin.router.setHomeRoute('courses');
   }
 
   function onOpenCourses() {
@@ -39,36 +39,16 @@ define(function(require) {
   }
 
   function onCoursesLoaded(options) {
-    switch (options.type) {
-      case 'shared':
-        Origin.trigger('location:title:update', {
-          breadcrumbs: ['courses'],
-          title: window.polyglot.t('app.sharedprojects')
-        });
-        Origin.router.createView(CoursesView, {collection: new SharedProjectCollection});
-        break;
-      case 'all':
-        Origin.trigger('location:title:update', {
-          breadcrumbs: ['courses'],
-          title: window.polyglot.t('app.projects')
-        });
-        // Origin.router.createView(DashboardView, {collection: new ProjectCollection});
-        // Origin.router.createView(DashboardView, {collection: new MyProjectCollection});
-        var Backbone = require('backbone');
-        var M = require('coreJS/project/models/projectModel');
-        var P = Backbone.Collection.extend({ model: M, url: 'api/all/course' });
-        Origin.router.createView(CoursesView, { collection: new P });
-        break;
-      default:
-        console.error('Cannot load courses location \'' + options.type + '\'');
-        break;
-    }
+    Origin.trigger('location:title:update', {
+      breadcrumbs: ['courses'],
+      title: window.polyglot.t('app.projects')
+    });
+    Origin.router.createView(CoursesView, { collection: new ProjectCollection });
   }
 
   function onTagFetchSuccess(collection) {
     Origin.sidebar.addView(new CoursesSidebarView({ collection: collection }).$el);
-    var coursesType = Origin.location.route1 || 'all';
-    Origin.trigger('courses:loaded', { type: coursesType });
+    Origin.trigger('courses:loaded');
   }
 
   function onTagFetchError() {

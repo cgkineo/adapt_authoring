@@ -9,6 +9,7 @@ define(function(require) {
       "_=_": "handleIndex",
       ":module(/*route1)(/*route2)(/*route3)(/*route4)": "handleRoute"
     },
+    homeRoute: "",
 
     initialize: function() {
       this.$loading = $('.loading');
@@ -44,13 +45,16 @@ define(function(require) {
       this.navigateTo('user/login');
     },
 
-    navigateToDashboard: function() {
-      this.navigateTo('dashboard');
+    navigateToHome: function() {
+      if(!this.homeRoute) {
+        return console.error('No home route has been set');
+      }
+      this.navigateTo(this.homeRoute);
     },
 
     handleIndex: function() {
       this.showLoading();
-      this.isUserAuthd() ? this.navigateToDashboard() : this.navigateToLogin();
+      this.isUserAuthd() ? this.navigateToHome() : this.navigateToLogin();
     },
 
     handleRoute: function(module, route1, route2, route3, route4) {
@@ -71,6 +75,10 @@ define(function(require) {
       this.updateCurrentLocation(arguments);
 
       Origin.trigger('router:' + module, route1, route2, route3, route4);
+    },
+
+    setHomeRoute: function(route) {
+      this.homeRoute = route;
     },
 
     updateCurrentLocation: function(routeArguments) {

@@ -182,7 +182,7 @@ define(function(require) {
     },
 
     closeProject: function() {
-      Origin.router.navigateToDashboard();
+      Origin.router.navigateTo('courses');
     }
   });
 

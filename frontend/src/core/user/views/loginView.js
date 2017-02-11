@@ -5,16 +5,13 @@ define(function(require) {
   var OriginView = require('coreJS/app/views/originView');
 
   var LoginView = OriginView.extend({
-
     className: 'login',
-
     tagName: "div",
-
     events: {
-      'keydown #login-input-username' : 'clearErrorStyling',
-      'keydown #login-input-password' : 'clearErrorStyling',
-      'click .login-form-submit'      : 'submitLoginDetails',
-      'click button.dash'             : 'goToDash'
+      'keydown #login-input-username': 'clearErrorStyling',
+      'keydown #login-input-password': 'clearErrorStyling',
+      'click .login-form-submit': 'submitLoginDetails',
+      'click button.home': 'goToHome'
     },
 
     preRender: function() {
@@ -26,9 +23,9 @@ define(function(require) {
       Origin.trigger('login:loaded');
     },
 
-    goToDash: function(e) {
+    goToHome: function(e) {
       e && e.preventDefault();
-      Origin.router.navigate('#/dashboard', { trigger: true });
+      Origin.router.navigateToHome();
     },
 
     handleEnterKey: function(e) {

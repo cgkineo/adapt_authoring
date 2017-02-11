@@ -47,7 +47,7 @@ define(function(require){
       EditorOriginView.prototype.render.apply(this, arguments);
 
       Origin.trigger('location:title:update', {
-        breadcrumbs: ['dashboard','course', { title: window.polyglot.t('app.themeeditor') }],
+        breadcrumbs: ['courses','course', { title: window.polyglot.t('app.themeeditor') }],
         title: window.polyglot.t('app.themingtitle')
       });
 

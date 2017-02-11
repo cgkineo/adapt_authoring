@@ -5,7 +5,7 @@ define(function(require) {
 
   var ProjectCollection = Backbone.Collection.extend({
     model: ProjectModel,
-    url: 'api/content/course'
+    url: 'api/all/course'
   });
 
   return ProjectCollection;

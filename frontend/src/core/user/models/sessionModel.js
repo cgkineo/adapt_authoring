@@ -38,7 +38,7 @@ define(function(require) {
             success: function() {
               Origin.trigger('user:updated');
               // get users
-              if(Origin.permissions.hasPermissions(["{{tenantid}}/user:read"])){
+              if(Origin.permissions.hasPermissions(["{{tenantid}}/user:read"])) {
                 var users = new UserCollection();
                 users.fetch({
                   success: _.bind(function(collection) {
@@ -78,7 +78,7 @@ define(function(require) {
       $.post('/api/logout', _.bind(function() {
         this.set(this.defaults);
         Origin.trigger('login:changed');
-        Origin.router.navigate('#/user/login', { trigger: true });
+        Origin.router.navigateTo('user/login');
       }, this));
     },
 
@@ -100,7 +100,7 @@ define(function(require) {
                 });
                 Origin.trigger('login:changed');
                 Origin.trigger('schemas:loadData', function() {
-                  Origin.router.navigate('#/dashboard', { trigger: true });
+                  Origin.router.navigateToHome();
                 });
               }
             }, this)

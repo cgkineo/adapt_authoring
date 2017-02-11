@@ -5,7 +5,6 @@ define(function(require) {
   var Origin = require('coreJS/app/origin');
   var OriginView = require('coreJS/app/views/originView');
   var ProjectView = require('coreJS/project/views/projectView');
-  var SharedProjectView = require('coreJS/project/views/sharedProjectView');
   var ProjectCollection = require('coreJS/project/collections/projectCollection');
 
   var CoursesView = OriginView.extend({

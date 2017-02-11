@@ -1,6 +1,5 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require){
-
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var OriginView = require('coreJS/app/views/originView');
@@ -25,25 +24,25 @@ define(function(require){
     exporting: false,
 
     events: {
-      'dblclick'                        : 'editProject',
-      'click'                           : 'selectProject',
-      'click a.open-context-course'     : 'openContextMenu',
-      'click a.course-delete'           : 'deleteProjectPrompt',
-      'click .projects-details-tags-button-show' : 'onProjectShowTagsButtonClicked',
-      'click .projects-details-tags-button-hide' : 'onProjectHideTagsButtonClicked',
+      'dblclick': 'editProject',
+      'click': 'selectProject',
+      'click a.open-context-course': 'openContextMenu',
+      'click a.course-delete': 'deleteProjectPrompt',
+      'click .projects-details-tags-button-show': 'onProjectShowTagsButtonClicked',
+      'click .projects-details-tags-button-hide': 'onProjectHideTagsButtonClicked',
       // Preview events
-      'mouseover .pos.large'            : 'showLargePreview',
-      'mouseover .pos.medium'           : 'showMediumPreview',
-      'mouseover .pos.small'            : 'showSmallPreview',
+      'mouseover .pos.large': 'showLargePreview',
+      'mouseover .pos.medium': 'showMediumPreview',
+      'mouseover .pos.small': 'showSmallPreview',
       'mouseout .pos.medium, .pos.small': 'showLargePreview'
     },
 
     preRender: function() {
-      this.listenTo(Origin, 'dashboard:dashboardView:removeSubViews', this.remove);
+      this.listenTo(Origin, 'courses:coursesView:removeSubViews', this.remove);
       this.listenTo(this, 'remove', this.remove);
       this.listenTo(Origin, 'editorView:deleteProject:' + this.model.get('_id'), this.deleteProject);
-      this.listenTo(Origin, 'dashboard:projectView:itemSelected', this.deselectItem);
-      this.listenTo(Origin, 'dashboard:dashboardView:deselectItem', this.deselectItem);
+      this.listenTo(Origin, 'courses:projectView:itemSelected', this.deselectItem);
+      this.listenTo(Origin, 'courses:coursesView:deselectItem', this.deselectItem);
 
       this.on('contextMenu:course:editSettings', this.editProjectSettings);
       this.on('contextMenu:course:edit', this.editProject);
@@ -79,7 +78,7 @@ define(function(require){
     },
 
     selectItem: function() {
-      Origin.trigger('dashboard:projectView:itemSelected');
+      Origin.trigger('courses:projectView:itemSelected');
       this.$el.addClass('selected');
       this.model.set({_isSelected:true});
     },
@@ -91,7 +90,7 @@ define(function(require){
 
     deleteProjectPrompt: function(event) {
       event && event.preventDefault();
-      if(this.model.get('_isShared') === true) {
+      if(this.model.get('_sharing')._isShared === true) {
         Origin.Notify.confirm({
           type: 'warning',
           title: window.polyglot.t('app.deletesharedproject'),

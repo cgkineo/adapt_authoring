@@ -148,7 +148,7 @@ define(function(require) {
     var modelTitle = model && model.get && model.get('title');
     var langString = window.polyglot.t('app.' + titleKey);
 
-    var crumbs = ['dashboard'];
+    var crumbs = ['courses'];
     if(loc.type !== 'menu') crumbs.push('course');
     if(loc.action === 'edit') {
       var page = getNearestPage(model);
@@ -353,7 +353,7 @@ define(function(require) {
         });
         Origin.sidebar.addView(new EditorMenuSidebarView().$el, {
           "backButtonText": "Back to courses",
-          "backButtonRoute": '/#/dashboard'
+          "backButtonRoute": '/#/courses'
         });
       }
     });

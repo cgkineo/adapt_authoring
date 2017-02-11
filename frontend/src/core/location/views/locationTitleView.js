@@ -19,10 +19,10 @@ define(function(require) {
       // TODO localise
       if(data) {
         if(data.breadcrumbs) {
-          // Dashboard
-          var dashboardI = _.indexOf(data.breadcrumbs, 'dashboard');
-          if(dashboardI > -1) {
-            data.breadcrumbs.splice(dashboardI, 1, { title: window.polyglot.t('app.dashboard'), url: '#' });
+          // Courses
+          var coursesI = _.indexOf(data.breadcrumbs, 'courses');
+          if(coursesI > -1) {
+            data.breadcrumbs.splice(coursesI, 1, { title: window.polyglot.t('app.courses'), url: '#' });
           }
           // Course
           var courseI = _.indexOf(data.breadcrumbs, 'course');

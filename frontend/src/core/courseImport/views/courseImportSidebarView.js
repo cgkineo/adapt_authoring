@@ -14,7 +14,7 @@ define(function(require) {
     },
 
     onCancelClicked: function() {
-      Origin.router.navigateToDashboard();
+      Origin.router.navigateToHome();
     }
   }, {
     template: 'courseImportSidebar'
