@@ -57,6 +57,7 @@ module.exports = function(grunt) {
             'frontend/src/modules/**/*.less',
             'frontend/src/plugins/**/*.less'
           ],
+          paths: 'frontend/src/core/less',
           generateSourceMaps: true,
           compress: false,
           dest: 'frontend/build/css',
@@ -73,6 +74,7 @@ module.exports = function(grunt) {
             'frontend/src/modules/**/*.less',
             'frontend/src/plugins/**/*.less'
           ],
+          paths: 'frontend/src/core/less',
           generateSourceMaps: false,
           compress: true,
           dest: 'frontend/build/css',
@@ -343,14 +345,17 @@ module.exports = function(grunt) {
       }
 
       function getLessOptions() {
-        var ret = { 'compress': options.compress };
+        var ret = {
+          compress: options.compress,
+          paths: options.paths
+        };
 
         if (shouldGenerateSourceMaps) {
           ret.sourceMap = {
             'sourceMapFileInline': false,
             'outputSourceFiles': true,
             'sourceMapBasepath': 'src',
-            'sourceMapURL': mapFilename,
+            'sourceMapURL': mapFilename
           };
         }
 

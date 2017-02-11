@@ -1,6 +1,11 @@
-@import '../../../less/variables.less';
+@import 'buttons';
+@import 'variables';
+
+@button-side-padding: 25px;
 
 .sidebar {
+    background-color:@sidebar-color;
+    color:@sidebar-text-color;
     position:fixed;
     top:0;
     left:0px;
@@ -9,7 +14,28 @@
     overflow-y:auto;
     overflow-x:hidden;
     a {
+        color:@sidebar-text-color;
         text-decoration: none;
+        transition:all 0.3s;
+        &:hover, &:focus {
+            color:darken(@sidebar-text-color, 10%);
+        }
+    }
+    button {
+        &[class^="action-"],
+        &[class*=" action-"] {
+            margin: 5px @button-side-padding;
+            width: @sidebar-width - @button-side-padding * 2;
+            height: 50px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius:@button-radius;
+            font-size: 15px;
+            text-align: center;
+            i {
+                margin-right: 5px;
+            }
+        }
     }
 
     .sidebar-item-container {
@@ -56,6 +82,17 @@
           right: 18px;
         }
       }
+    }
+
+    .sidebar-row, .sidebar-breadcrumb {
+        button, a {
+            margin: 0;
+            color:@sidebar-text-color;
+            transition:all 0.3s;
+            &:hover {
+                color:@sidebar-item-hover-text-color;
+            }
+        }
     }
 }
 
@@ -120,24 +157,31 @@
 }
 
 .sidebar-item-title {
+    background-color:@sidebar-color;
+    color:@sidebar-title-text-color;
     text-align:center;
-}
-
-.sidebar-item-title-inner {
-    padding:30px 20px;
-    font-size: @sidebar-input-font-size;
-    font-weight: 200;
-}
-
-.sidebar-divide {
-    text-align:center;
-    i {
-        margin-right:4px;
+    .sidebar-item-title-inner {
+      padding:30px 20px;
+      font-size: @sidebar-input-font-size;
+      font-weight: 200;
     }
 }
 
-.sidebar-divide-inner {
-    padding:20px;
+.sidebar-divide {
+    background-color:@sidebar-color;
+    .sidebar-divide-inner {
+        padding:20px;
+        text-align:center;
+
+        h3 {
+            font-size:13px;
+            font-weight:600;
+        }
+
+        i {
+          margin-right:4px;
+        }
+    }
 }
 
 .sidebar-fieldset-filter.error {
@@ -147,6 +191,17 @@
     &:hover {
         background: darken(@alert-color, 10%);
     }
+}
+
+.sidebar-progress {
+    z-index: 1;
+    width: 0px;
+    height:100%;
+    position: absolute;
+    background: darken(@secondary-color, 10%);
+    left: 0px;
+    top: 0px;
+    opacity: 0.3;
 }
 
 button.sidebar-tag {

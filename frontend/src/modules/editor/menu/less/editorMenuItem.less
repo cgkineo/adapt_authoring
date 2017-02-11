@@ -1,102 +1,155 @@
+@import 'variables';
+
+.editor-menu-layer-actions {
+  .primary-hollow {
+    i {
+      color: @primary-color;
+    }
+    &:hover, &:active, &:focus {
+      i {
+        color: @white;
+      }
+    }
+  }
+}
+
 .editor-menu-item {
+  position: relative;
+  display: block;
+  margin: 20px;
+  background-color: #fff;
+  transition:box-shadow 0.3s;
+  box-shadow: 0px 0px 1px 1px #EEE;
+
+  &:hover {
+    box-shadow: 0px 0px 3px 3px #e0e0e0;
+    cursor: pointer;
+    .project-settings {
+      top:0%;
+      opacity:1;
+    }
+  }
+
+  &-inner {
+    overflow:hidden;
+    border-radius:3px;
     position: relative;
-    display: block;
-    margin: 20px;
+    background-color: #fff;
+    cursor: pointer;
+    padding: 30px 20px 10px;
+    transition:background-color 0.3s;
+    &:hover {
+      .editor-menu-item-settings {
+        top:0;
+        opacity:1;
+      }
+    }
+  }
 
-    &-inner {
-        overflow:hidden;
-        border-radius:3px;
-        position: relative;
-        background-color: #fff;
-        cursor: pointer;
-        padding: 30px 20px 10px;
-        transition:background-color 0.3s;
+  &-title {
+    padding: 5px 0 0 30px;
+  }
+
+  &-icon {
+    float: left;
+    font-size:24px;
+    margin-bottom:10px;
+    color: #999;
+  }
+
+  &.expanded {
+    transition: background-color 0s;
+    &.content-type-menu .editor-menu-item-pin {
+      display:block;
+      border-left: 10px solid @primary-color;
+    }
+
+    .editor-menu-item-inner {
+      color:#fff;
+      background-color: @primary-color;
+      transition:background-color 0s;
+      border:1px solid @primary-color;
+    }
+
+    .editor-menu-item-settings {
+      a {
+        color:#fff;
+        transition:all 0.3s;
         &:hover {
-            .editor-menu-item-settings {
-                top:0;
-                opacity:1;
-            }
+          color:darken(#fff, 10%);
         }
+      }
     }
 
-    &-title {
-        padding: 5px 0 0 30px;
+    .editor-menu-item-icon.menu i:before {
+      content: "\f115";
     }
 
-    &-icon {
-        float: left;
-        font-size:24px;
-        margin-bottom:10px;
-        color: #999;
-        &.page {
-        }
+    .editor-menu-item-icon {
+      color: #fff;
+    }
+  }
 
-        &.menu {
-        }
+  &.selected {
+    transition: background-color 0s;
+
+    .editor-menu-item-inner {
+      color:#fff;
+      background-color: @primary-color;
+      border:1px solid @primary-color;
     }
 
-	&.expanded {
-        transition:background-color 0s;
-
-        &.content-type-menu .editor-menu-item-pin {
-            display:block;
+    .editor-menu-item-settings {
+      top:0;
+      opacity:1;
+      a {
+        color:#fff;
+        transition:all 0.3s;
+        &:hover {
+          color:darken(#fff, 10%);
         }
-        .editor-menu-item-icon.menu i:before {
-            content: "\f115";
-        }
-
-        .editor-menu-item-icon {
-            color: #fff;
-        }
-	}
-
-	&.selected {
-        transition:background-color 0s;
-
-        .editor-menu-item-settings {
-            top:0;
-            opacity:1;
-        }
-
-        &.content-type-menu .editor-menu-item-pin {
-            display:block;
-        }
-
-        .editor-menu-item-icon {
-            color: #fff;
-        }
-	}
-
-    .handle {
-        cursor: move;
+      }
     }
+
+    &.content-type-menu .editor-menu-item-pin {
+      display:block;
+      border-left: 10px solid @primary-color;
+    }
+
+    .editor-menu-item-icon {
+      color: #fff;
+    }
+  }
+
+  .handle {
+    cursor: move;
+  }
 }
 
 .editor-menu-item-settings {
-    position: absolute;
-    top: 0%;
-    left: 0px;
-    font-size: 16px;
-    width:100%;
-    opacity:1;
-    transition:all 0.3s;
-    &-inner {
-        padding:6px;
-    }
-
-    .editor-delete-contentobject-element {
-        float:right;
-    }
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  font-size: 16px;
+  width:100%;
+  opacity:1;
+  transition:all 0.3s;
+  &-inner {
+    padding:6px;
+  }
+  .editor-delete-contentobject-element {
+    float:right;
+  }
 }
 
 .editor-menu-item-pin {
-    display:none;
-    position: absolute;
-    right: -10px;
-    top: 50%;
-    margin-top: -5px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
+  display:none;
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  margin-top: -5px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
 }
