@@ -1,5 +1,7 @@
 @import '../../../less/animations.less';
 
+@default-project-image: url(assets/origami-project.jpg);
+
 .courses {
     overflow-y:scroll;
     ul {
@@ -48,7 +50,7 @@ ul.courses-options {
         .project-image {
             width:100%;
             height:150px;
-            background-image:url(/images/origami-project.jpg);
+            background-image: @default-project-image;
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
@@ -102,7 +104,7 @@ ul.courses-options {
         .project-image {
             width:100%;
             height:125px;
-            background-image:url(/images/origami-project.jpg);
+            background-image: @default-project-image;
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
@@ -136,7 +138,7 @@ ul.courses-options {
         .project-image {
             width: 150px;
             height: 150px;
-            background-image:url(/images/origami-project.jpg);
+            background-image: @default-project-image;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
