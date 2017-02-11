@@ -3,21 +3,21 @@ define(function(require) {
   var Origin = require('coreJS/app/origin');
   var SidebarItemView = require('coreJS/sidebar/views/sidebarItemView');
 
-  var DashboardSidebarView = SidebarItemView.extend({
+  var CoursesSidebarView = SidebarItemView.extend({
     settings: {
       autoRender: true
     },
 
     events: {
-      'click .dashboard-sidebar-add-course': 'addCourse',
+      'click .courses-sidebar-add-course': 'addCourse',
 
-      'keyup .dashboard-sidebar-filter-search-input': 'filterProjectsByTitle',
+      'keyup .courses-sidebar-filter-search-input': 'filterProjectsByTitle',
 
       'click .sidebar-filter-clear': 'clearFilterInput',
 
-      'click .dashboard-sidebar-tag': 'onFilterButtonClicked',
-      'click .dashboard-sidebar-add-tag': 'onAddTagClicked',
-      'click .dashboard-sidebar-row-filter': 'onFilterRemovedClicked',
+      'click .courses-sidebar-tag': 'onFilterButtonClicked',
+      'click .courses-sidebar-add-tag': 'onAddTagClicked',
+      'click .courses-sidebar-row-filter': 'onFilterRemovedClicked',
 
       'click .course-filter': 'onCourseFilterClicked'
     },
@@ -27,11 +27,11 @@ define(function(require) {
     },
 
     gotoMyCourses: function() {
-      Origin.router.navigateToDashboard();
+      Origin.router.navigateTo('courses');
     },
 
     gotoSharedCourses: function() {
-      Origin.router.navigateTo('dashboard/shared');
+      Origin.router.navigateTo('courses/shared');
     },
 
     postRender: function() {
@@ -43,7 +43,7 @@ define(function(require) {
     },
 
     highlightSearchBox: function() {
-      var $input = this.$('.dashboard-sidebar-filter-search-input');
+      var $input = this.$('.courses-sidebar-filter-search-input');
       $input.removeClass('search-highlight')
       if ($input.val()) {
         $input.addClass('search-highlight')
@@ -52,7 +52,7 @@ define(function(require) {
 
     updateUI: function(userPreferences) {
       if (userPreferences.search) {
-        this.$('.dashboard-sidebar-filter-search-input').val(userPreferences.search);
+        this.$('.courses-sidebar-filter-search-input').val(userPreferences.search);
       }
       this.highlightSearchBox();
 
@@ -66,7 +66,7 @@ define(function(require) {
       event && event.preventDefault();
 
       var filterText = $(event.currentTarget).val().trim();
-      Origin.trigger('dashboard:dashboardSidebarView:filterBySearch', filterText);
+      Origin.trigger('courses:coursesSidebarView:filterBySearch', filterText);
 
       this.highlightSearchBox();
     },
@@ -74,7 +74,7 @@ define(function(require) {
     clearFilterInput: function(event) {
       event && event.preventDefault();
       var $currentTarget = $(event.currentTarget);
-      $currentTarget.prev('.dashboard-sidebar-filter-input').val('').trigger('keyup', [true]);
+      $currentTarget.prev('.courses-sidebar-filter-input').val('').trigger('keyup', [true]);
       this.highlightSearchBox();
     },
 
@@ -85,10 +85,10 @@ define(function(require) {
       // toggle filter
       if ($currentTarget.hasClass('selected')) {
         $currentTarget.removeClass('selected');
-        Origin.trigger('dashboard:sidebarFilter:remove', filterType);
+        Origin.trigger('courses:sidebarFilter:remove', filterType);
       } else {
         $currentTarget.addClass('selected');
-        Origin.trigger('dashboard:sidebarFilter:add', filterType);
+        Origin.trigger('courses:sidebarFilter:add', filterType);
       }
     },
 
@@ -125,7 +125,7 @@ define(function(require) {
         // Else add it to array
         this.tags.push(tag);
       }
-      Origin.trigger('dashboard:dashboardSidebarView:filterByTags', this.tags);
+      Origin.trigger('courses:coursesSidebarView:filterByTags', this.tags);
     },
 
     addTagToSidebar: function(tag) {
@@ -133,12 +133,12 @@ define(function(require) {
 
       var data = {
         rowClasses: 'sidebar-row-filter',
-        buttonClasses: 'dashboard-sidebar-row-filter',
+        buttonClasses: 'courses-sidebar-row-filter',
         tag: tag
       };
 
       var template = Handlebars.templates['sidebarRowFilter'];
-      this.$('.dashboard-sidebar-add-tag').parent().after(template(data));
+      this.$('.courses-sidebar-add-tag').parent().after(template(data));
     },
 
     onFilterRemovedClicked: function(event) {
@@ -162,19 +162,19 @@ define(function(require) {
       var $filters = $('.course-filter i.fa-toggle-on');
 
       if($filters.length === 0) {
-        Origin.trigger('dashboard:dashboardSidebarView:filter', { title: 'xxxxxxxx' });
+        Origin.trigger('courses:coursesSidebarView:filter', { title: 'xxxxxxxx' });
       } else if($filters.length === 1) {
         var isMine = $($filters[0]).closest('.course-filter').attr('data-id') === 'mine';
-        Origin.trigger('dashboard:dashboardSidebarView:filter', {
+        Origin.trigger('courses:coursesSidebarView:filter', {
           createdBy: isMine ? Origin.sessionModel.get('id') : { $ne: Origin.sessionModel.get('id') }
         });
       } else if($filters.length === 2) {
-        Origin.trigger('dashboard:dashboardSidebarView:filter', {});
+        Origin.trigger('courses:coursesSidebarView:filter', {});
       }
     }
   }, {
-    template: 'dashboardSidebar'
+    template: 'coursesSidebar'
   });
 
-  return DashboardSidebarView;
+  return CoursesSidebarView;
 });

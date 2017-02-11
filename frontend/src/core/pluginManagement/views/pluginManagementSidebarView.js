@@ -11,8 +11,7 @@ define(function(require) {
       'click .pluginManagement-sidebar-themes'	: 'onManageThemesClicked',
       'click .pluginManagement-sidebar-components'	: 'onManageComponentsClicked',
       'click .pluginManagement-sidebar-menus'  : 'onManageMenusClicked',
-      'click .pluginManagement-sidebar-getPlugins'  : 'onGetPluginsClicked',
-      'click .pluginManagement-sidebar-dashboard'	: 'returnToDashboard'
+      'click .pluginManagement-sidebar-getPlugins'  : 'onGetPluginsClicked'
     },
 
     onAddNewPluginClicked: function () {
@@ -41,12 +40,7 @@ define(function(require) {
 
     managePluginType: function (pluginType) {
       Origin.router.navigate('#/pluginManagement/' + pluginType, {trigger: false});
-    },
-
-    returnToDashboard: function() {
-      Origin.router.navigate('#/dashboard', {trigger:true});
-    },
-
+    }
   }, {
     template: 'pluginManagementSidebar'
   });

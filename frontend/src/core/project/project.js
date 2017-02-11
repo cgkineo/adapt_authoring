@@ -1,6 +1,6 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
-  
+
   var Origin = require('coreJS/app/origin');
   var ProjectModel = require('coreJS/project/models/projectModel');
   var ProjectDetailView = require('coreJS/project/views/projectDetailView');
@@ -8,7 +8,7 @@ define(function(require) {
 
   Origin.on('navigation:help', function() {
     switch (Origin.location.module) {
-      case 'dashboard':
+      case 'courses':
         switch (Origin.location.route1) {
           case 'shared':
             window.open("https://github.com/adaptlearning/adapt_authoring/wiki/Creating-a-Course#shared-courses");
@@ -73,15 +73,15 @@ define(function(require) {
     switch (action) {
       case 'new':
         var project = new ProjectModel();
-        
+
         // Default the new project title
         project.set('title', window.polyglot.t('app.placeholdernewcourse'));
         project.set('displayTitle', window.polyglot.t('app.placeholdernewcourse'));
-        
+
         var form = Origin.scaffold.buildForm({
           model: project
         });
-        
+
         Origin.trigger('location:title:update', {title: window.polyglot.t('app.addnewproject')});
         Origin.editingOverlay.addView(new ProjectDetailView({model: project, form: form}).$el);
         Origin.sidebar.addView(new ProjectDetailEditSidebarView({form: form}).$el);

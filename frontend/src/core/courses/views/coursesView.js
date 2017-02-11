@@ -1,5 +1,5 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
-define(function(require){
+define(function(require) {
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var Origin = require('coreJS/app/origin');
@@ -8,14 +8,14 @@ define(function(require){
   var SharedProjectView = require('coreJS/project/views/sharedProjectView');
   var ProjectCollection = require('coreJS/project/collections/projectCollection');
 
-  var DashboardView = OriginView.extend({
+  var CoursesView = OriginView.extend({
 
     settings: {
       autoRender: true,
-      preferencesKey: 'dashboard'
+      preferencesKey: 'courses'
     },
 
-    className: 'dashboard',
+    className: 'courses',
 
     preRender: function(options) {
       this.setupFilterSettings();
@@ -38,28 +38,28 @@ define(function(require){
     },
 
     addListeners: function() {
-      this.listenTo(Origin, 'window:resize', this.resizeDashboard);
+      this.listenTo(Origin, 'window:resize', this.resizeCourses);
 
-      this.listenTo(Origin, 'dashboard:layout:thumb', this.switchLayoutToThumb);
-      this.listenTo(Origin, 'dashboard:layout:grid', this.switchLayoutToGrid);
-      this.listenTo(Origin, 'dashboard:layout:list', this.switchLayoutToList);
+      this.listenTo(Origin, 'courses:layout:thumb', this.switchLayoutToThumb);
+      this.listenTo(Origin, 'courses:layout:grid', this.switchLayoutToGrid);
+      this.listenTo(Origin, 'courses:layout:list', this.switchLayoutToList);
 
-      this.listenTo(Origin, 'dashboard:sort:asc', this.sortAscending);
-      this.listenTo(Origin, 'dashboard:sort:desc', this.sortDescending);
-      this.listenTo(Origin, 'dashboard:sort:updated', this.sortLastUpdated);
+      this.listenTo(Origin, 'courses:sort:asc', this.sortAscending);
+      this.listenTo(Origin, 'courses:sort:desc', this.sortDescending);
+      this.listenTo(Origin, 'courses:sort:updated', this.sortLastUpdated);
 
-      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filter', this.filter);
-      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterBySearch', this.filterBySearchInput);
-      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterByTags', this.filterByTags);
+      this.listenTo(Origin, 'courses:coursesSidebarView:filter', this.filter);
+      this.listenTo(Origin, 'courses:coursesSidebarView:filterBySearch', this.filterBySearchInput);
+      this.listenTo(Origin, 'courses:coursesSidebarView:filterByTags', this.filterByTags);
 
-      this.listenTo(Origin, 'dashboard:sidebarFilter:add', this.addTag);
-      this.listenTo(Origin, 'dashboard:sidebarFilter:remove', this.removeTag);
+      this.listenTo(Origin, 'courses:sidebarFilter:add', this.addTag);
+      this.listenTo(Origin, 'courses:sidebarFilter:remove', this.removeTag);
 
       this.listenTo(this.collection, 'add', this.appendProjectItem);
       this.listenTo(this.collection, 'sync', this.checkIfCollectionIsEmpty)
     },
 
-    resizeDashboard: function() {
+    resizeCourses: function() {
       var navigationHeight = $('.navigation').outerHeight();
       var locationTitleHeight = $('.location-title').outerHeight();
       var windowHeight = $(window).height();
@@ -69,24 +69,24 @@ define(function(require){
 
     checkIfCollectionIsEmpty: function() {
       if (this.collection.length === 0) {
-        this.$('.dashboard-no-projects').removeClass('display-none');
+        this.$('.courses-no-projects').removeClass('display-none');
       } else {
-        this.$('.dashboard-no-projects').addClass('display-none');
+        this.$('.courses-no-projects').addClass('display-none');
       }
     },
 
     postRender: function() {
       this.setupUserPreferences();
       // Fake a scroll trigger - just incase the limit is too low and no scroll bars
-      $('.dashboard-projects').trigger('scroll');
+      $('.courses-projects').trigger('scroll');
       this.lazyRenderCollection();
-      this.resizeDashboard();
+      this.resizeCourses();
       this.setViewToReady();
       this.setupLazyScrolling();
     },
 
     switchLayoutToList: function() {
-      var $container = $('.dashboard-projects');
+      var $container = $('.courses-projects');
 
       $container.removeClass('grid-layout thumb-layout').addClass('list-layout');
 
@@ -94,7 +94,7 @@ define(function(require){
     },
 
     switchLayoutToGrid: function() {
-      var $container = $('.dashboard-projects');
+      var $container = $('.courses-projects');
 
       $container.removeClass('list-layout thumb-layout').addClass('grid-layout');
 
@@ -102,7 +102,7 @@ define(function(require){
     },
 
     switchLayoutToThumb: function() {
-      var $container = $('.dashboard-projects');
+      var $container = $('.courses-projects');
       $container.removeClass('list-layout grid-layout').addClass('thumb-layout');
       this.setUserPreference('layout','thumb');
     },
@@ -190,9 +190,9 @@ define(function(require){
 
     emptyProjectsContainer: function() {
       // Trigger event to kill zombie views
-      Origin.trigger('dashboard:dashboardView:removeSubViews');
+      Origin.trigger('courses:coursesView:removeSubViews');
       // Empty collection container
-      this.$('.dashboard-projects').empty();
+      this.$('.courses-projects').empty();
     },
 
     updateCollection: function(reset) {
@@ -241,9 +241,9 @@ define(function(require){
       projectModel.attributes.title = this.highlight(projectModel.attributes.title);
 
       // var projectClass = projectModel.isEditable() ? ProjectView : SharedProjectView;
-      // this.$('.dashboard-projects').append(new projectClass({ model: projectModel }).$el);
+      // this.$('.courses-projects').append(new projectClass({ model: projectModel }).$el);
 
-      this.$('.dashboard-projects').append(new ProjectView({ model: projectModel }).$el);
+      this.$('.courses-projects').append(new ProjectView({ model: projectModel }).$el);
     },
 
     highlight: function(text){
@@ -306,8 +306,8 @@ define(function(require){
     },
 
     setupLazyScrolling: function() {
-      var $projectContainer = $('.dashboard');
-      var $projectContainerInner = $('.dashboard-inner');
+      var $projectContainer = $('.courses');
+      var $projectContainerInner = $('.courses-inner');
       // Remove event before attaching
       $projectContainer.off('scroll');
 
@@ -326,8 +326,8 @@ define(function(require){
       }, this));
     }
   }, {
-    template: 'dashboard'
+    template: 'courses'
   })
 
-  return DashboardView;
+  return CoursesView;
 });
