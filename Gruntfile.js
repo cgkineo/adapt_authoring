@@ -7,8 +7,11 @@ module.exports = function(grunt) {
       pkg: grunt.file.readJSON('package.json'),
       "merge-json": {
         en: {
-            src: ['routes/lang/en-application.json','frontend/src/**/lang/en.json'],
-            dest: 'routes/lang/en.json',
+            src: [
+              'routes/lang/en-application.json',
+              'frontend/src/**/lang/en.json'
+            ],
+            dest: 'routes/lang/en.json'
         }
       },
       copy: {
@@ -17,14 +20,22 @@ module.exports = function(grunt) {
             {
               expand: true,
               flatten: true,
-              src: ['frontend/src/core/**/assets/**','frontend/src/plugins/**/assets/**'],
+              src: [
+                'frontend/src/core/**/assets/**',
+                'frontend/src/modules/**/assets/**',
+                'frontend/src/plugins/**/assets/**'
+              ],
               dest: 'frontend/src/adaptbuilder/css/assets/',
               filter: 'isFile'
             },
             {
               expand: true,
               cwd: 'frontend/src/core/libraries/tinymce/',
-              src: ['plugins/**/*', 'skins/**/*', 'themes/**/*'],
+              src: [
+                'plugins/**/*',
+                'skins/**/*',
+                'themes/**/*'
+              ],
               dest: 'frontend/src/adaptbuilder/js/'
             },
             {
@@ -43,6 +54,7 @@ module.exports = function(grunt) {
             src: [
               'frontend/src/core/**/*.less',
               'frontend/src/less/**/*.less',
+              'frontend/src/modules/**/*.less',
               'frontend/src/plugins/**/*.less'
             ],
             generateSourceMaps: true,
@@ -58,6 +70,7 @@ module.exports = function(grunt) {
             src: [
               'frontend/src/core/**/*.less',
               'frontend/src/less/**/*.less',
+              'frontend/src/modules/**/*.less',
               'frontend/src/plugins/**/*.less'
             ],
             generateSourceMaps: false,
@@ -81,12 +94,25 @@ module.exports = function(grunt) {
             partialsPathRegex: /\/partials\//
           },
           files: {
-            "frontend/src/templates/templates.js": ["frontend/src/core/**/*.hbs", "frontend/src/plugins/**/*.hbs"]
+            "frontend/src/templates/templates.js": [
+              "frontend/src/core/**/*.hbs",
+              "frontend/src/modules/**/*.hbs",
+              "frontend/src/plugins/**/*.hbs"
+            ]
           }
         }
       },
       jscs: {
-        src: ['frontend/src/core/**/*.js','!frontend/src/core/libraries/**/*.js','lib/**/*.js','plugins/**/*.js','!plugins/content/**','routes/**/*.js','!**/node_modules/**'],
+        src: [
+          'frontend/src/core/**/*.js',
+          'frontend/src/modules/**/*.js',
+          '!frontend/src/core/libraries/**/*.js',
+          'lib/**/*.js',
+          'plugins/**/*.js',
+          '!plugins/content/**',
+          'routes/**/*.js',
+          '!**/node_modules/**'
+        ],
         options: {
           config: ".jscsrc",
           reporter: "unix",
@@ -116,7 +142,11 @@ module.exports = function(grunt) {
             }
           },
           files: {
-            src: ['frontend/src/core/**/*.js','!frontend/src/core/libraries/**/*.js']
+            src: [
+              'frontend/src/core/**/*.js',
+              'frontend/src/modules/**/*.js',
+              '!frontend/src/core/libraries/**/*.js'
+            ]
           }
         },
         backend: {
@@ -124,29 +154,37 @@ module.exports = function(grunt) {
             node: true
           },
           files: {
-            src: ['lib/**/*.js','plugins/**/*.js','!plugins/content/**','routes/**/*.js','!**/node_modules/**']
+            src: [
+              'lib/**/*.js',
+              'plugins/**/*.js',
+              '!plugins/content/**',
+              'routes/**/*.js',
+              '!**/node_modules/**'
+            ]
           }
         }
       },
       requirejs: {
         dev: {
           options: {
-            name: "core/app/app",
-            mainConfigFile: "frontend/src/core/app/config.js",
+            baseUrl: 'frontend/src/',
+            name: 'core/app',
+            include: ['core/config'],
+            mainConfigFile: "frontend/src/core/config.js",
             out: "frontend/src/adaptbuilder/js/origin.js",
             generateSourceMaps: true,
-            preserveLicenseComments:true,
-            include: ['core/app/config'],
+            preserveLicenseComments: true,
             optimize: "none"
           }
         },
         compile: {
           options: {
-            name: "core/app/app",
-            mainConfigFile: "frontend/src/core/app/config.js",
+            baseUrl: 'frontend/src/',
+            name: 'core/app',
+            include: ['core/app'],
+            mainConfigFile: "frontend/src/core/config.js",
             out: "frontend/src/adaptbuilder/js/origin.js",
-            include: ['core/app/config'],
-            optimize:"uglify2"
+            optimize: "uglify2"
           }
         }
       },

@@ -1,0 +1,12 @@
+// LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
+define(function(require) {
+
+    var EditorModel = require('modules/editor/global/models/editorModel');
+
+    var EditorClipboardModel = EditorModel.extend({
+        urlRoot: '/api/content/clipboard',
+    });
+
+    return EditorClipboardModel;
+
+});

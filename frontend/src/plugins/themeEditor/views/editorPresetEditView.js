@@ -3,8 +3,8 @@ define(function(require){
   var _ = require('underscore');
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
-  var Origin = require('coreJS/app/origin');
-  var Helpers = require('coreJS/app/helpers');
+  var Origin = require('core/origin');
+  var Helpers = require('core/helpers');
 
   var PresetEditView = Backbone.View.extend({
     tagName: 'div',

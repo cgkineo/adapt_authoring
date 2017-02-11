@@ -2,8 +2,8 @@
 define(function(require){
   var _ = require('underscore');
   var Backbone = require('backbone');
-  var Origin = require('coreJS/app/origin');
-  var OriginView = require('coreJS/app/views/originView');
+  var Origin = require('core/origin');
+  var OriginView = require('core/views/originView');
 
   var ServerLogView = OriginView.extend({
     tagName: 'div',

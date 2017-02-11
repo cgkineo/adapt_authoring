@@ -2,8 +2,8 @@
 define(function(require){
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
-  var Helpers = require('coreJS/app/helpers');
-  var Origin = require('coreJS/app/origin');
+  var Helpers = require('core/helpers');
+  var Origin = require('core/origin');
 
   var SuperToolbarView = Backbone.View.extend({
     tagName: 'div',

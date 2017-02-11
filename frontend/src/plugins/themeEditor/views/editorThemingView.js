@@ -1,11 +1,11 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require){
   var Backbone = require('backbone');
-  var EditorOriginView = require('editorGlobal/views/editorOriginView');
+  var EditorOriginView = require('modules/editor/global/views/editorOriginView');
   var Handlebars = require('handlebars');
-  var Helpers = require('coreJS/app/helpers');
-  var Origin = require('coreJS/app/origin');
-  var ThemeCollection = require('editorTheme/collections/editorThemeCollection');
+  var Helpers = require('core/helpers');
+  var Origin = require('core/origin');
+  var ThemeCollection = require('modules/editor/theme/collections/editorThemeCollection');
 
   var PresetCollection = require('../collections/editorPresetCollection.js');
   var PresetEditView = require('./editorPresetEditView.js');
@@ -429,8 +429,6 @@ define(function(require){
         type: 'error',
         text: window.polyglot.t('app.errorsave')
       });
-      console.log('EditorThemingView.onSaveError:', arguments);
-
       this.navigateBack();
     },
 
