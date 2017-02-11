@@ -4,251 +4,250 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-      pkg: grunt.file.readJSON('package.json'),
-      "merge-json": {
-        en: {
+    pkg: grunt.file.readJSON('package.json'),
+    "merge-json": {
+      en: {
+        src: [
+          'routes/lang/en-application.json',
+          'frontend/src/**/lang/en.json'
+        ],
+        dest: 'routes/lang/en.json'
+      }
+    },
+    copy: {
+      main: {
+        files: [
+          {
+            expand: true,
+            flatten: true,
             src: [
-              'routes/lang/en-application.json',
-              'frontend/src/**/lang/en.json'
+              'frontend/src/core/**/assets/**',
+              'frontend/src/modules/**/assets/**',
+              'frontend/src/plugins/**/assets/**'
             ],
-            dest: 'routes/lang/en.json'
+            dest: 'frontend/build/css/assets/',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            cwd: 'frontend/src/core/libraries/tinymce/',
+            src: [
+              'plugins/**/*',
+              'skins/**/*',
+              'themes/**/*'
+            ],
+            dest: 'frontend/build/js/'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['frontend/src/core/libraries/ace/**/*'],
+            dest: 'frontend/build/js/ace'
+          }
+        ]
+      }
+    },
+    less: {
+      dev: {
+        options: {
+          baseUrl: 'frontend/src',
+          src: [
+            'frontend/src/core/**/*.less',
+            'frontend/src/less/**/*.less',
+            'frontend/src/modules/**/*.less',
+            'frontend/src/plugins/**/*.less'
+          ],
+          generateSourceMaps: true,
+          compress: false,
+          dest: 'frontend/build/css',
+          cssFilename: 'adapt.css',
+          mapFilename: 'adapt.css.map'
         }
       },
-      copy: {
-        main: {
-          files: [
-            {
-              expand: true,
-              flatten: true,
-              src: [
-                'frontend/src/core/**/assets/**',
-                'frontend/src/modules/**/assets/**',
-                'frontend/src/plugins/**/assets/**'
-              ],
-              dest: 'frontend/src/adaptbuilder/css/assets/',
-              filter: 'isFile'
-            },
-            {
-              expand: true,
-              cwd: 'frontend/src/core/libraries/tinymce/',
-              src: [
-                'plugins/**/*',
-                'skins/**/*',
-                'themes/**/*'
-              ],
-              dest: 'frontend/src/adaptbuilder/js/'
-            },
-            {
-              expand: true,
-              flatten: true,
-              src: ['frontend/src/core/libraries/ace/**/*'],
-              dest: 'frontend/src/adaptbuilder/js/ace'
-            }
+      compile: {
+        options: {
+          baseUrl: 'frontend/src',
+          src: [
+            'frontend/src/core/**/*.less',
+            'frontend/src/less/**/*.less',
+            'frontend/src/modules/**/*.less',
+            'frontend/src/plugins/**/*.less'
+          ],
+          generateSourceMaps: false,
+          compress: true,
+          dest: 'frontend/build/css',
+          cssFilename: 'adapt.css',
+          mapFilename: 'adapt.css.map'
+        }
+      }
+    },
+    handlebars: {
+      compile: {
+        options: {
+          namespace:"Handlebars.templates",
+          processName: function(filePath) {
+            var newFilePath = filePath.split("/");
+            newFilePath = newFilePath[newFilePath.length - 1].replace(/\.[^/.]+$/, "");
+            return  newFilePath;
+          },
+          partialRegex: /^part_/,
+          partialsPathRegex: /\/partials\//
+        },
+        files: {
+          "frontend/src/templates/templates.js": [
+            "frontend/src/core/**/*.hbs",
+            "frontend/src/modules/**/*.hbs",
+            "frontend/src/plugins/**/*.hbs"
           ]
         }
+      }
+    },
+    jscs: {
+      src: [
+        'frontend/src/core/**/*.js',
+        'frontend/src/modules/**/*.js',
+        '!frontend/src/core/libraries/**/*.js',
+        'lib/**/*.js',
+        'plugins/**/*.js',
+        '!plugins/content/**',
+        'routes/**/*.js',
+        '!**/node_modules/**'
+      ],
+      options: {
+        config: ".jscsrc",
+        reporter: "unix",
+        fix: true
+      }
+    },
+    jshint: {
+      options: {
+        reporter: require('jshint-stylish'),
+        curly: true,
+        undef: true,
+        asi: true,
+        eqnull: false,
+        sub: true
+      },
+      frontend: {
+        options: {
+          browser: true,
+          es3: true,
+          jquery: true,
+          globals: {
+            Backbone: false,
+            Handlebars: false,
+            _: false,
+            define: false,
+            require: false
+          }
+        },
+        files: {
+          src: [
+            'frontend/src/core/**/*.js',
+            'frontend/src/modules/**/*.js',
+            '!frontend/src/core/libraries/**/*.js'
+          ]
+        }
+      },
+      backend: {
+        options: {
+          node: true
+        },
+        files: {
+          src: [
+            'lib/**/*.js',
+            'plugins/**/*.js',
+            '!plugins/content/**',
+            'routes/**/*.js',
+            '!**/node_modules/**'
+          ]
+        }
+      }
+    },
+    requirejs: {
+      dev: {
+        options: {
+          baseUrl: 'frontend/src/',
+          name: 'core/app',
+          include: ['core/config'],
+          mainConfigFile: "frontend/src/core/config.js",
+          out: "frontend/build/js/origin.js",
+          generateSourceMaps: true,
+          preserveLicenseComments: true,
+          optimize: "none"
+        }
+      },
+      compile: {
+        options: {
+          baseUrl: 'frontend/src/',
+          name: 'core/app',
+          include: ['core/app'],
+          mainConfigFile: "frontend/src/core/config.js",
+          out: "frontend/build/js/origin.js",
+          optimize: "uglify2"
+        }
+      }
+    },
+    watch: {
+      handlebars: {
+        files: ['frontend/src/**/*.hbs'],
+        tasks: ['handlebars']
       },
       less: {
-        dev: {
-          options: {
-            baseUrl: 'frontend/src',
-            src: [
-              'frontend/src/core/**/*.less',
-              'frontend/src/less/**/*.less',
-              'frontend/src/modules/**/*.less',
-              'frontend/src/plugins/**/*.less'
-            ],
-            generateSourceMaps: true,
-            compress: false,
-            dest: 'frontend/src/adaptbuilder/css',
-            cssFilename: 'adapt.css',
-            mapFilename: 'adapt.css.map'
-          }
+        files: ['frontend/src/**/*.less'],
+        tasks: ['less:dev']
+      },
+      routes: {
+        files: ['routes/**/*.*'],
+        tasks: ['handlebars']
+      },
+      lang: {
+        files: ['routes/lang/*.json'],
+        tasks: ['merge-json']
+      }
+    },
+    casperjs: {
+      files: ['./test_frontend/*.js', '!./test_frontend/login.js']
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'dot',
+          timeout: 3500,
+          require: ['should'],
+          ui: 'bdd',
+          globals: ['app']
         },
-        compile: {
-          options: {
-            baseUrl: 'frontend/src',
-            src: [
-              'frontend/src/core/**/*.less',
-              'frontend/src/less/**/*.less',
-              'frontend/src/modules/**/*.less',
-              'frontend/src/plugins/**/*.less'
-            ],
-            generateSourceMaps: false,
-            compress: true,
-            dest: 'frontend/src/adaptbuilder/css',
-            cssFilename: 'adapt.css',
-            mapFilename: 'adapt.css.map'
-          }
-        }
-      },
-      handlebars: {
-        compile: {
-          options: {
-            namespace:"Handlebars.templates",
-            processName: function(filePath) {
-              var newFilePath = filePath.split("/");
-              newFilePath = newFilePath[newFilePath.length - 1].replace(/\.[^/.]+$/, "");
-              return  newFilePath;
-            },
-            partialRegex: /^part_/,
-            partialsPathRegex: /\/partials\//
-          },
-          files: {
-            "frontend/src/templates/templates.js": [
-              "frontend/src/core/**/*.hbs",
-              "frontend/src/modules/**/*.hbs",
-              "frontend/src/plugins/**/*.hbs"
-            ]
-          }
-        }
-      },
-      jscs: {
         src: [
-          'frontend/src/core/**/*.js',
-          'frontend/src/modules/**/*.js',
-          '!frontend/src/core/libraries/**/*.js',
-          'lib/**/*.js',
-          'plugins/**/*.js',
-          '!plugins/content/**',
-          'routes/**/*.js',
-          '!**/node_modules/**'
-        ],
-        options: {
-          config: ".jscsrc",
-          reporter: "unix",
-          fix: true
-        }
-      },
-      jshint: {
-        options: {
-          reporter: require('jshint-stylish'),
-          curly: true,
-          undef: true,
-          asi: true,
-          eqnull: false,
-          sub: true
-        },
-        frontend: {
-          options: {
-            browser: true,
-            es3: true,
-            jquery: true,
-            globals: {
-              Backbone: false,
-              Handlebars: false,
-              _: false,
-              define: false,
-              require: false
-            }
-          },
-          files: {
-            src: [
-              'frontend/src/core/**/*.js',
-              'frontend/src/modules/**/*.js',
-              '!frontend/src/core/libraries/**/*.js'
-            ]
-          }
-        },
-        backend: {
-          options: {
-            node: true
-          },
-          files: {
-            src: [
-              'lib/**/*.js',
-              'plugins/**/*.js',
-              '!plugins/content/**',
-              'routes/**/*.js',
-              '!**/node_modules/**'
-            ]
-          }
-        }
-      },
-      requirejs: {
-        dev: {
-          options: {
-            baseUrl: 'frontend/src/',
-            name: 'core/app',
-            include: ['core/config'],
-            mainConfigFile: "frontend/src/core/config.js",
-            out: "frontend/src/adaptbuilder/js/origin.js",
-            generateSourceMaps: true,
-            preserveLicenseComments: true,
-            optimize: "none"
-          }
-        },
-        compile: {
-          options: {
-            baseUrl: 'frontend/src/',
-            name: 'core/app',
-            include: ['core/app'],
-            mainConfigFile: "frontend/src/core/config.js",
-            out: "frontend/src/adaptbuilder/js/origin.js",
-            optimize: "uglify2"
-          }
-        }
-      },
-      watch: {
-        handlebars: {
-          files: ['frontend/src/**/*.hbs'],
-          tasks: ['handlebars']
-        },
-        less: {
-          files: ['frontend/src/**/*.less'],
-          tasks: ['less:dev']
-        },
-        routes: {
-          files: ['routes/**/*.*'],
-          tasks: ['handlebars']
-        },
-        lang: {
-          files: ['routes/lang/*.json'],
-          tasks: ['merge-json']
-        }
-      },
-      casperjs: {
-        files: ['./test_frontend/*.js', '!./test_frontend/login.js']
-      },
-      mochaTest: {
-        test: {
-          options: {
-            reporter: 'dot',
-            timeout: 3500,
-            require: ['should'],
-            ui: 'bdd',
-            globals: ['app']
-          },
-          src: [
-            'test/*.js'
-          ]
-        }
-      },
-      open: {
-        server: {
-          path: 'http://localhost:<%= server.options.port %>/'
-        }
-      },
+          'test/*.js'
+        ]
+      }
+    },
+    open: {
       server: {
-        options: {
-          port: getHttpPort() || process.env.PORT
-        }
-      },
-      requirePlugins: {
-        url: 'frontend/src/plugins/*',
-        dest: 'frontend/src/plugins'
+        path: 'http://localhost:<%= server.options.port %>/'
       }
-    });
-
-    function getHttpPort() {
-      if (grunt.file.exists(__dirname + "/conf/config.json")) {
-          var config = require(__dirname + "/conf/config.json");
-          return config.serverPort;
-      } else {
-        return false;
+    },
+    server: {
+      options: {
+        port: getHttpPort() || process.env.PORT
       }
-    };
+    },
+    requirePlugins: {
+      url: 'frontend/src/plugins/*',
+      dest: 'frontend/src/plugins'
+    }
+  });
 
-    grunt.registerTask('build', 'Running build', function(mode) {
+  function getHttpPort() {
+    if (!grunt.file.exists(__dirname + "/conf/config.json")) {
+      return false;
+    }
+    var config = require(__dirname + "/conf/config.json");
+    return config.serverPort;
+  };
+
+  grunt.registerTask('build', 'Running build', function(mode) {
       // To toggle compilation call either:
       // grunt build:prod - or
       // grunt build:dev
