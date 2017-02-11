@@ -1,179 +1,180 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
+  var Origin = require('coreJS/app/origin');
+  var SidebarItemView = require('coreJS/sidebar/views/sidebarItemView');
 
-    var Origin = require('coreJS/app/origin');
-    var SidebarItemView = require('coreJS/sidebar/views/sidebarItemView');
+  var DashboardSidebarView = SidebarItemView.extend({
+    settings: {
+      autoRender: true
+    },
 
-    var DashboardSidebarView = SidebarItemView.extend({
-        settings: {
-          autoRender: true
-        },
+    events: {
+      'click .dashboard-sidebar-add-course': 'addCourse',
 
-        events: {
-            'click .dashboard-sidebar-add-course'   : 'addCourse',
-            'click .dashboard-sidebar-my-courses'   : 'gotoMyCourses',
-            'click .dashboard-sidebar-shared-courses' : 'gotoSharedCourses',
-            'keyup .dashboard-sidebar-filter-search-input':'filterProjectsByTitle',
-            'click .sidebar-filter-clear': 'clearFilterInput',
-            'click .dashboard-sidebar-tag': 'onFilterButtonClicked',
-            'click .dashboard-sidebar-add-tag': 'onAddTagClicked',
-            'click .dashboard-sidebar-row-filter': 'onFilterRemovedClicked'
-        },
+      'keyup .dashboard-sidebar-filter-search-input': 'filterProjectsByTitle',
 
-        postRender: function() {
-            this.listenTo(Origin, 'sidebarFilter:filterByTags', this.filterProjectsByTags);
-            this.listenTo(Origin, 'sidebarFilter:addTagToSidebar', this.addTagToSidebar);
-            this.listenTo(Origin, 'sidebar:update:ui', this.updateUI);
-            this.tags = [];
-            this.usedTags = [];
-        },
+      'click .sidebar-filter-clear': 'clearFilterInput',
 
-        highlightSearchBox: function(){
-            this.$('.dashboard-sidebar-filter-search-input').removeClass('search-highlight')
-            if (this.$('.dashboard-sidebar-filter-search-input').val()) {
-                this.$('.dashboard-sidebar-filter-search-input').addClass('search-highlight')
-            }
-        },
+      'click .dashboard-sidebar-tag': 'onFilterButtonClicked',
+      'click .dashboard-sidebar-add-tag': 'onAddTagClicked',
+      'click .dashboard-sidebar-row-filter': 'onFilterRemovedClicked',
 
-        updateUI: function(userPreferences) {
-            if (userPreferences.search) {
-                this.$('.dashboard-sidebar-filter-search-input').val(userPreferences.search);
-            }
-            this.highlightSearchBox();
-            if (userPreferences.tags) {
-                this.tags = userPreferences.tags;
-                var systemTags = [/*'archive', 'favourites'*/];
-                _.each(userPreferences.tags, function(tag) {
-                    // If this tag is part of the systemTags
-                    // select this tag
-                    if (_.contains(systemTags, tag)) {
-                        this.$('.dashboard-sidebar-tag-'+tag.title).addClass('selected');
-                    } else {
-                        this.addTagToSidebar(tag);
-                    }
-                }, this);
-            }
-        },
+      'click .course-filter': 'onCourseFilterClicked'
+    },
 
-        addCourse: function() {
-            Origin.router.navigate('#/project/new', {trigger:true});
-        },
+    addCourse: function() {
+      Origin.router.navigateTo('project/new');
+    },
 
-        gotoMyCourses: function() {
-            Origin.router.navigate('#/dashboard', {trigger: true});
-        },
+    gotoMyCourses: function() {
+      Origin.router.navigateToDashboard();
+    },
 
-        gotoSharedCourses: function() {
-            Origin.router.navigate('#/dashboard/shared', {trigger: true});
-        },
+    gotoSharedCourses: function() {
+      Origin.router.navigateTo('dashboard/shared');
+    },
 
-        filterProjectsByTitle: function(event, filter) {
-            if (event) {
-                event.preventDefault();
-            }
-            var filterText = $(event.currentTarget).val().trim();
-            Origin.trigger('dashboard:dashboardSidebarView:filterBySearch', filterText);
+    postRender: function() {
+      this.listenTo(Origin, 'sidebarFilter:filterByTags', this.filterProjectsByTags);
+      this.listenTo(Origin, 'sidebarFilter:addTagToSidebar', this.addTagToSidebar);
+      this.listenTo(Origin, 'sidebar:update:ui', this.updateUI);
+      this.tags = [];
+      this.usedTags = [];
+    },
 
-            this.highlightSearchBox();
-        },
+    highlightSearchBox: function() {
+      var $input = this.$('.dashboard-sidebar-filter-search-input');
+      $input.removeClass('search-highlight')
+      if ($input.val()) {
+        $input.addClass('search-highlight')
+      }
+    },
 
-        clearFilterInput: function(event) {
-            event.preventDefault();
-            var $currentTarget = $(event.currentTarget);
-            $currentTarget.prev('.dashboard-sidebar-filter-input').val('').trigger('keyup', [true]);
-            this.highlightSearchBox();
-        },
+    updateUI: function(userPreferences) {
+      if (userPreferences.search) {
+        this.$('.dashboard-sidebar-filter-search-input').val(userPreferences.search);
+      }
+      this.highlightSearchBox();
 
-        onFilterButtonClicked: function(event) {
-            $currentTarget = $(event.currentTarget);
-            var filterType = $currentTarget.attr('data-tag');
+      if (userPreferences.tags) {
+        this.tags = userPreferences.tags;
+        _.each(this.tags, this.addTagToSidebar, this);
+      }
+    },
 
-            // If this filter is already selected - remove filter
-            // else add the filter
-            if ($currentTarget.hasClass('selected')) {
-                $currentTarget.removeClass('selected');
-                Origin.trigger('dashboard:sidebarFilter:remove', filterType);
-            } else {
-                $currentTarget.addClass('selected');
-                Origin.trigger('dashboard:sidebarFilter:add', filterType);
-            }
+    filterProjectsByTitle: function(event, filter) {
+      event && event.preventDefault();
 
-        },
+      var filterText = $(event.currentTarget).val().trim();
+      Origin.trigger('dashboard:dashboardSidebarView:filterBySearch', filterText);
 
-        onAddTagClicked: function(event) {
-            event.preventDefault();
-            var availableTags = [];
-            // Go through each tag in the collection and filter out duplicate tags
-            // to create an array of unique project tags
+      this.highlightSearchBox();
+    },
 
-            this.collection.each(function(tag) {
-                var availableTagsTitles = _.pluck(availableTags, 'title');
-                var usedTagTitles = _.pluck(this.usedTags, 'title');
-                if (!_.contains(availableTagsTitles, tag.get('title')) && !_.contains(usedTagTitles, tag.get('title'))) {
-                    availableTags.push(tag.attributes);
-                }
+    clearFilterInput: function(event) {
+      event && event.preventDefault();
+      var $currentTarget = $(event.currentTarget);
+      $currentTarget.prev('.dashboard-sidebar-filter-input').val('').trigger('keyup', [true]);
+      this.highlightSearchBox();
+    },
 
-            }, this);
+    onFilterButtonClicked: function(event) {
+      event && event.preventDefault();
+      $currentTarget = $(event.currentTarget);
+      var filterType = $currentTarget.attr('data-tag');
+      // toggle filter
+      if ($currentTarget.hasClass('selected')) {
+        $currentTarget.removeClass('selected');
+        Origin.trigger('dashboard:sidebarFilter:remove', filterType);
+      } else {
+        $currentTarget.addClass('selected');
+        Origin.trigger('dashboard:sidebarFilter:add', filterType);
+      }
+    },
 
-            Origin.trigger('sidebar:sidebarFilter:add', {
-                title:'Filter by Tags',
-                items: availableTags
-            });
-        },
+    onAddTagClicked: function(event) {
+      event && event.preventDefault();
+      var availableTags = [];
+      // generate a unique set of tag
+      this.collection.each(function(tag) {
+        var availableTagsTitles = _.pluck(availableTags, 'title');
+        var usedTagTitles = _.pluck(this.usedTags, 'title');
+        var isTagAvailable = _.contains(availableTagsTitles, tag.get('title'));
+        var isTagUsed = !_.contains(usedTagTitles, tag.get('title'));
 
-        onTagClicked: function(event) {
-            var tag = $(event.currentTarget).toggleClass('selected').attr('data-tag');
-            this.filterProjectsByTags(tag);
-        },
+        if (!isTagAvailable && !isTagUsed) availableTags.push(tag.attributes);
+      }, this);
 
-        filterProjectsByTags: function(tag) {
+      Origin.trigger('sidebar:sidebarFilter:add', {
+        title: window.polyglot.t('app.filterbytags'),
+        items: availableTags
+      });
+    },
 
-            // Check if the tag is already being filtered and remove it
-            if (_.findWhere(this.tags, { id: tag.id } )) {
-                this.tags = _.reject(this.tags, function(tagItem) {
-                    return tagItem.id === tag.id;
-                });
-            } else {
-                // Else add it to array
-                this.tags.push(tag);
-            }
+    onTagClicked: function(event) {
+      event && event.preventDefault();
+      var tag = $(event.currentTarget).toggleClass('selected').attr('data-tag');
+      this.filterProjectsByTags(tag);
+    },
 
-            Origin.trigger('dashboard:dashboardSidebarView:filterByTags', this.tags);
-        },
+    filterProjectsByTags: function(tag) {
+      // Check if the tag is already being filtered and remove it
+      if(_.findWhere(this.tags, { id: tag.id })) {
+        this.tags = _.reject(this.tags, function(tagItem) { return tagItem.id === tag.id; });
+      } else {
+        // Else add it to array
+        this.tags.push(tag);
+      }
+      Origin.trigger('dashboard:dashboardSidebarView:filterByTags', this.tags);
+    },
 
-        addTagToSidebar: function(tag) {
-            this.usedTags.push(tag);
+    addTagToSidebar: function(tag) {
+      this.usedTags.push(tag);
 
-            var template = Handlebars.templates['sidebarRowFilter'];
-            var data = {
-                rowClasses: 'sidebar-row-filter',
-                buttonClasses:'dashboard-sidebar-row-filter',
-                tag: tag
-            };
+      var data = {
+        rowClasses: 'sidebar-row-filter',
+        buttonClasses: 'dashboard-sidebar-row-filter',
+        tag: tag
+      };
 
-            this.$('.dashboard-sidebar-add-tag').parent().after(template(data));
-        },
+      var template = Handlebars.templates['sidebarRowFilter'];
+      this.$('.dashboard-sidebar-add-tag').parent().after(template(data));
+    },
 
-        onFilterRemovedClicked: function(event) {
-            var tag = {
-                title: $(event.currentTarget).attr('data-title'),
-                id: $(event.currentTarget).attr('data-id')
-            }
+    onFilterRemovedClicked: function(event) {
+      event && event.preventDefault();
+      var tag = {
+        title: $(event.currentTarget).attr('data-title'),
+        id: $(event.currentTarget).attr('data-id')
+      };
+      // Remove this tag from the usedTags
+      this.usedTags = _.reject(this.usedTags, function(item) { return item.id === tag.id; });
 
-            // Remove this tag from the usedTags
-            this.usedTags = _.reject(this.usedTags, function(item) {
-                return item.id === tag.id;
-            });
+      this.filterProjectsByTags(tag);
 
-            this.filterProjectsByTags(tag);
+      $(event.currentTarget).parent().remove();
+    },
 
-            $(event.currentTarget).parent().remove();
-        }
+    onCourseFilterClicked: function(event) {
+      event && event.preventDefault();
+      $('i', event.currentTarget).toggleClass('fa-toggle-on');
 
-    }, {
-        template: 'dashboardSidebar'
-    });
+      var $filters = $('.course-filter i.fa-toggle-on');
 
-    return DashboardSidebarView;
+      if($filters.length === 0) {
+        Origin.trigger('dashboard:dashboardSidebarView:filter', { title: 'xxxxxxxx' });
+      } else if($filters.length === 1) {
+        var isMine = $($filters[0]).closest('.course-filter').attr('data-id') === 'mine';
+        Origin.trigger('dashboard:dashboardSidebarView:filter', {
+          createdBy: isMine ? Origin.sessionModel.get('id') : { $ne: Origin.sessionModel.get('id') }
+        });
+      } else if($filters.length === 2) {
+        Origin.trigger('dashboard:dashboardSidebarView:filter', {});
+      }
+    }
+  }, {
+    template: 'dashboardSidebar'
+  });
 
+  return DashboardSidebarView;
 });

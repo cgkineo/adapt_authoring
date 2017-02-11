@@ -8,7 +8,20 @@ define(function(require){
 
   var ProjectView = OriginView.extend({
     tagName: 'li',
-    className: 'project-list-item',
+    className: function() {
+      var className = 'project-list-item';
+
+      if(this.model.get('createdBy') === Origin.sessionModel.get('id')) {
+        className += ' mine';
+      } else if(this.model.get('_sharing')._isShared) {
+        className += ' shared';
+      }
+
+      if(!this.model.isEditable()) {
+        className += ' not-editable';
+      }
+      return className;
+    },
     exporting: false,
 
     events: {
@@ -66,7 +79,6 @@ define(function(require){
 
     selectProject: function(event) {
       event && event.preventDefault();
-
       this.selectItem();
     },
 
@@ -83,7 +95,6 @@ define(function(require){
 
     deleteProjectPrompt: function(event) {
       event && event.preventDefault();
-
       if(this.model.get('_isShared') === true) {
         Origin.Notify.confirm({
           type: 'warning',

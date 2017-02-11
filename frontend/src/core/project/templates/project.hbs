@@ -1,5 +1,4 @@
-<div class="project-inner clearfix unselectable {{#if _isShared}}shared{{/if}}" data-id="{{_id}}">
-
+<div class="project-inner clearfix unselectable" data-id="{{_id}}">
     <div class="project-header">
       <div class="project-header-inner">
 
@@ -31,12 +30,6 @@
           <div class="projects-details-label">{{t 'app.lastupdated'}}</div>
           <div class="projects-details-value">{{momentFormat updatedAt "Do MMMM YYYY"}}</div>
         </div>
-
-          {{#if _isShared}}{{#ifUserIsMe createdBy}}
-          <div class="status-bar shared">
-            <div class="inner">{{t 'app.shared'}}</div>
-          </div>
-          {{/ifUserIsMe}}{{/if}}
 
         {{#if false}}<!-- tags.length -->
         <div class="project-details-tags project-details-row tags">

@@ -1,6 +1,5 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require){
-
   var Backbone = require('backbone');
   var Handlebars = require('handlebars');
   var Origin = require('coreJS/app/origin');
@@ -20,44 +19,44 @@ define(function(require){
 
     preRender: function(options) {
       this.setupFilterSettings();
-
-      this.listenTo(Origin, 'window:resize', this.resizeDashboard);
-
-      this.listenTo(Origin, 'dashboard:layout:thumb', this.switchLayoutToThumb);
-      this.listenTo(Origin, 'dashboard:layout:grid', this.switchLayoutToGrid);
-      this.listenTo(Origin, 'dashboard:layout:list', this.switchLayoutToList);
-      // These need to pass in true to re-render the collections
-      this.listenTo(Origin, 'dashboard:sort:asc', function() {
-        this.sortAscending(true);
-      });
-      this.listenTo(Origin, 'dashboard:sort:desc', function() {
-        this.sortDescending(true);
-      });
-      this.listenTo(Origin, 'dashboard:sort:updated', function() {
-        this.sortLastUpdated(true);
-      });
-      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterBySearch', this.filterBySearchInput);
-      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterByTags', this.filterCoursesByTags);
-      this.listenTo(Origin, 'dashboard:sidebarFilter:add', this.addTag);
-      this.listenTo(Origin, 'dashboard:sidebarFilter:remove', this.removeTag);
-      this.listenTo(this.collection, 'add', this.appendProjectItem);
-      this.listenTo(this.collection, 'sync', this.checkIfCollectionIsEmpty)
+      this.addListeners();
     },
 
     setupFilterSettings: function() {
       // Setup filtering and lazy loading settings
       this.sort = {createdAt: -1};
       this.search = {};
+      // TODO set this limit to what can actually fit on screen...
       this.courseLimit = -32;
       this.courseDenominator = 32;
-
       // Set empty filters
       this.filters = [];
       this.tags = [];
 
       this.collectionLength = 0;
       this.shouldStopFetches = false;
-      
+    },
+
+    addListeners: function() {
+      this.listenTo(Origin, 'window:resize', this.resizeDashboard);
+
+      this.listenTo(Origin, 'dashboard:layout:thumb', this.switchLayoutToThumb);
+      this.listenTo(Origin, 'dashboard:layout:grid', this.switchLayoutToGrid);
+      this.listenTo(Origin, 'dashboard:layout:list', this.switchLayoutToList);
+
+      this.listenTo(Origin, 'dashboard:sort:asc', this.sortAscending);
+      this.listenTo(Origin, 'dashboard:sort:desc', this.sortDescending);
+      this.listenTo(Origin, 'dashboard:sort:updated', this.sortLastUpdated);
+
+      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filter', this.filter);
+      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterBySearch', this.filterBySearchInput);
+      this.listenTo(Origin, 'dashboard:dashboardSidebarView:filterByTags', this.filterByTags);
+
+      this.listenTo(Origin, 'dashboard:sidebarFilter:add', this.addTag);
+      this.listenTo(Origin, 'dashboard:sidebarFilter:remove', this.removeTag);
+
+      this.listenTo(this.collection, 'add', this.appendProjectItem);
+      this.listenTo(this.collection, 'sync', this.checkIfCollectionIsEmpty)
     },
 
     resizeDashboard: function() {
@@ -78,7 +77,6 @@ define(function(require){
 
     postRender: function() {
       this.setupUserPreferences();
-
       // Fake a scroll trigger - just incase the limit is too low and no scroll bars
       $('.dashboard-projects').trigger('scroll');
       this.lazyRenderCollection();
@@ -110,84 +108,72 @@ define(function(require){
     },
 
     sortAscending: function(shouldRenderProjects) {
-
       this.sort = {
         title: 1
       };
 
       this.setUserPreference('sort','asc', true);
-      if (shouldRenderProjects) {
 
+      if (shouldRenderProjects !== false) {
         this.updateCollection(true);
-
       }
-
     },
 
     sortDescending: function(shouldRenderProjects) {
-      
       this.sort = {
         title: -1
       }
 
       this.setUserPreference('sort','desc', true);
 
-      if (shouldRenderProjects) {
-
+      if (shouldRenderProjects !== false) {
         this.updateCollection(true);
-
       }
-
     },
 
     sortLastUpdated: function(shouldRenderProjects) {
-
       this.sort = {
         updatedAt: -1
       }
 
       this.setUserPreference('sort','updated', true);
 
-      if (shouldRenderProjects) {
-
+      if (shouldRenderProjects !== false) {
         this.updateCollection(true);
-
       }
-
     },
 
     setupUserPreferences: function() {
       // Preserve the user preferences or display default mode
       var userPreferences = this.getUserPreferences();
+
+      if(!userPreferences) {
+        return;
+      }
       // Check if the user preferences are list view
       // Else if nothing is set or is grid view default to grid view
-      if (userPreferences && userPreferences.layout === 'list') {
+      if (userPreferences.layout === 'list') {
         this.switchLayoutToList();
-      } else if (userPreferences && userPreferences.layout === 'thumb') {
+      } else if (userPreferences.layout === 'thumb') {
         this.switchLayoutToThumb();
       } else {
         this.switchLayoutToGrid();
       }
-
       // Check if there's any user preferences for search and tags
       // then set on this view
-      if (userPreferences) {
-        var searchString = (userPreferences.search || '');
-        this.search = this.convertFilterTextToPattern(searchString);
-        this.setUserPreference('search', searchString, true);
-        this.tags = (_.pluck(userPreferences.tags, 'id') || []);
-        this.setUserPreference('tags', userPreferences.tags, true);
-      }
-
+      var searchString = (userPreferences.search || '');
+      this.search = this.convertFilterTextToPattern(searchString);
+      this.setUserPreference('search', searchString, true);
+      this.tags = (_.pluck(userPreferences.tags, 'id') || []);
+      this.setUserPreference('tags', userPreferences.tags, true);
       // Check if sort is set and sort the collection
-      if (userPreferences && userPreferences.sort === 'desc') {
-        this.sortDescending();
-      } else if (userPreferences && userPreferences.sort === 'updated') {
-        this.sortLastUpdated();
+      if (userPreferences.sort === 'desc') {
+        this.sortDescending(false);
+      } else if (userPreferences.sort === 'updated') {
+        this.sortLastUpdated(false);
       } else {
-        this.sortAscending();
+        this.sortAscending(false);
       }
-
       // Once everything has been setup
       // refresh the userPreferences object
       userPreferences = this.getUserPreferences();
@@ -205,7 +191,6 @@ define(function(require){
     emptyProjectsContainer: function() {
       // Trigger event to kill zombie views
       Origin.trigger('dashboard:dashboardView:removeSubViews');
-
       // Empty collection container
       this.$('.dashboard-projects').empty();
     },
@@ -213,27 +198,20 @@ define(function(require){
     updateCollection: function(reset) {
       // If removing items, we need to reset our limits
       if (reset) {
-
         // Empty container
         this.emptyProjectsContainer();
         // Reset fetches cache
         this.shouldStopFetches = false;
-
         this.courseLimit = 0;
         this.collectionLength = 0;
         this.collection.reset();
       }
 
-      this.search = _.extend(this.search, {
-          tags: {
-              $all: this.tags
-          }
-      });
-
+      this.search = _.extend(this.search, { tags: { $all: this.tags }});
       // This is set when the fetched amount is equal to the collection length
       // Stops any further fetches and HTTP requests
       if (this.shouldStopFetches) {
-          return;
+        return;
       }
 
       this.collection.fetch({
@@ -244,45 +222,44 @@ define(function(require){
             skip: this.courseLimit,
             limit: this.courseDenominator,
             sort: this.sort
-          } 
+          }
         },
         success: _.bind(function(data) {
-
           // On successful collection fetching set lazy render to enabled
            if (this.collectionLength === this.collection.length) {
-              this.shouldStopFetches = true;
+            this.shouldStopFetches = true;
           } else {
-              this.shouldStopFetches = false;
-              this.collectionLength = this.collection.length;
+            this.shouldStopFetches = false;
+            this.collectionLength = this.collection.length;
           }
-
           this.isCollectionFetching = false;
         }, this)
       });
     },
 
     appendProjectItem: function(projectModel) {
+      projectModel.attributes.title = this.highlight(projectModel.attributes.title);
 
-      projectModel.attributes.title=this.highlight(projectModel.attributes.title)
+      // var projectClass = projectModel.isEditable() ? ProjectView : SharedProjectView;
+      // this.$('.dashboard-projects').append(new projectClass({ model: projectModel }).$el);
 
-      if (!projectModel.isEditable()) {
-        this.$('.dashboard-projects').append(new SharedProjectView({ model: projectModel }).$el);
-      } else {
-        this.$('.dashboard-projects').append(new ProjectView({ model: projectModel }).$el);
-      }
+      this.$('.dashboard-projects').append(new ProjectView({ model: projectModel }).$el);
     },
 
     highlight: function(text){
-
-      regExpEscape = function(str){
-        var specials = /[.*+?|()\[\]{}\\$^]/g; // .*+?|()[]{}\$^
-        return str.replace(specials, "\\$&");
-      };
-
       var userPreferences =this.getUserPreferences()
       var search = userPreferences.search || '';
-      var regex = new RegExp( regExpEscape(search), "gi");
-      return text.replace(regex, function(term) {return '<span class="highlighted">'+ term+ '</span>'});
+      var regex = new RegExp(this.regExpEscape(search), "gi");
+      return text.replace(regex, this.addHighlightWrapper);
+    },
+
+    regExpEscape: function(str){
+      var specials = /[.*+?|()\[\]{}\\$^]/g; // .*+?|()[]{}\$^
+      return str.replace(specials, "\\$&");
+    },
+
+    addHighlightWrapper: function(term) {
+      return '<span class="highlighted">' + term + '</span>';
     },
 
     addTag: function(filterType) {
@@ -296,20 +273,18 @@ define(function(require){
       this.tags = _.filter(this.tags, function(item) {
           return item != filterType;
       });
-
       this.filterCollection();
     },
 
     filterCollection: function() {
-      this.search.tags = this.tags.length
-          ? { $all: this.tags }
-          : null ;
+      this.search.tags = this.tags.length ? { $all: this.tags } : null;
       this.updateCollection(true);
     },
 
     convertFilterTextToPattern: function(filterText) {
-      var pattern = '.*' + filterText.toLowerCase() + '.*';
-      return { title: pattern};
+      return {
+        title: { $regex: '.*' + filterText + '.*', $options: 'i' }
+      };
     },
 
     filterBySearchInput: function (filterText) {
@@ -319,14 +294,18 @@ define(function(require){
       this.updateCollection(true);
     },
 
-    filterCoursesByTags: function(tags) {
+    filterByTags: function(tags) {
       this.setUserPreference('tags', tags, true);
       this.tags = _.pluck(tags, 'id');
       this.updateCollection(true);
     },
 
-    setupLazyScrolling: function() {
+    filter: function(search) {
+      this.search = search;
+      this.updateCollection(true);
+    },
 
+    setupLazyScrolling: function() {
       var $projectContainer = $('.dashboard');
       var $projectContainerInner = $('.dashboard-inner');
       // Remove event before attaching
@@ -336,7 +315,6 @@ define(function(require){
         var scrollTop = $projectContainer.scrollTop();
         var scrollableHeight = $projectContainerInner.height();
         var containerHeight = $projectContainer.height();
-
         // If the scroll position of the assets container is
         // near the bottom
         if ((scrollableHeight-containerHeight) - scrollTop < 30) {
@@ -345,14 +323,11 @@ define(function(require){
             this.lazyRenderCollection();
           }
         }
-
       }, this));
     }
-
   }, {
     template: 'dashboard'
   })
 
   return DashboardView;
-
 });

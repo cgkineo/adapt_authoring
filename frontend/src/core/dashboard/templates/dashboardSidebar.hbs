@@ -8,22 +8,25 @@
 
 		<div class="separator"></div>
 
-    <div class="sidebar-row">
-        <button class="dashboard-sidebar-my-courses">
-            <span class="dashboard-sidebar-my-courses-inner">
-                <i class="fa fa-chevron-right primary-color"/>
-                {{t 'app.myprojects'}}
-            </span>
-        </button>
-    </div>
-    <div class="sidebar-row">
-        <button class="dashboard-sidebar-shared-courses">
-            <span class="dashboard-sidebar-shared-courses-inner">
-                <i class="fa fa-chevron-right primary-color"/>
-                {{t 'app.sharedprojects'}}
-            </span>
-        </button>
-    </div>
+		<div class="sidebar-row">
+
+			<button class="course-filter" data-id="mine">
+				<span class="course-filter-inner">
+					<i class="fa fa-toggle-off fa-toggle-on"></i>
+					My courses
+				</span>
+			</button>
+
+			<button class="course-filter" data-id="shared">
+				<span class="course-filter-inner">
+					<i class="fa fa-toggle-off fa-toggle-on"></i>
+					Shared courses
+				</span>
+			</button>
+
+		</div>
+
+		<div class="separator"></div>
 
     <div class="sidebar-search-tag">
         <div class="sidebar-row">

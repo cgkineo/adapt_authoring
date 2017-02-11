@@ -574,20 +574,58 @@
       "default": false,
       "editorOnly": true
     },
-    "_isShared": {
-      "type": "boolean",
-      "default": true,
-      "editorOnly": true,
-      "inputType": {
-        "type": "Boolean",
-        "options": [
-          true,
-          false
-        ]
-      },
-      "validators": [],
-      "title": "Share with other users",
-      "help": "When this is set to 'true', your colleagues will be able to see this course from the 'Shared courses' option"
+    "_sharing": {
+      "type": "object",
+      "default": "",
+      "title": "",
+      "isSetting": false,
+      "properties": {
+        "_isShared": {
+          "type": "boolean",
+          "default": true,
+          "editorOnly": true,
+          "inputType": {
+            "type": "Boolean",
+            "options": [
+              true,
+              false
+            ]
+          },
+          "validators": [],
+          "title": "Share with other users",
+          "help": "When this is set to 'true', other users will be able to view this course."
+        },
+        "_isEditable": {
+          "type": "boolean",
+          "default": true,
+          "editorOnly": true,
+          "inputType": {
+            "type": "Boolean",
+            "options": [
+              true,
+              false
+            ]
+          },
+          "validators": [],
+          "title": "Make course editable",
+          "help": "When this is set to 'false', this course will become read-only (overrides below option)."
+        },
+        "_isEditableByOthers": {
+          "type": "boolean",
+          "default": false,
+          "editorOnly": true,
+          "inputType": {
+            "type": "Boolean",
+            "options": [
+              true,
+              false
+            ]
+          },
+          "validators": [],
+          "title": "Make course editable by others",
+          "help": "When this is set to 'false', this course will become read-only to other users."
+        }
+      }
     },
     "themeSettings": {
       "type": "object"
