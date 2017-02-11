@@ -7,6 +7,7 @@ require([
     'coreJS/app/router',
     'coreJS/app/permissions',
     'coreJS/user/user',
+    'coreJS/help/help',
     'coreJS/project/project',
     'coreJS/courses/courses',
     'coreJS/courseImport/courseImport',

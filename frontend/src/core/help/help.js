@@ -1,11 +1,7 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
-
   var Origin = require('coreJS/app/origin');
-  var ProjectModel = require('coreJS/project/models/projectModel');
-  var ProjectDetailView = require('coreJS/project/views/projectDetailView');
-  var ProjectDetailEditSidebarView = require('coreJS/project/views/projectDetailEditSidebarView');
-
+  
   Origin.on('navigation:help', function() {
     switch (Origin.location.module) {
       case 'courses':
@@ -67,40 +63,4 @@ define(function(require) {
         return;
     }
   });
-
-  Origin.on('router:project', function(action, id) {
-
-    switch (action) {
-      case 'new':
-        var project = new ProjectModel();
-
-        // Default the new project title
-        project.set('title', window.polyglot.t('app.placeholdernewcourse'));
-        project.set('displayTitle', window.polyglot.t('app.placeholdernewcourse'));
-
-        var form = Origin.scaffold.buildForm({
-          model: project
-        });
-
-        Origin.trigger('location:title:update', {title: window.polyglot.t('app.addnewproject')});
-        Origin.editingOverlay.addView(new ProjectDetailView({model: project, form: form}).$el);
-        Origin.sidebar.addView(new ProjectDetailEditSidebarView({form: form}).$el);
-        break;
-      case 'edit':
-        var project = new ProjectModel({_id: id});
-        project.fetch({
-          success: function() {
-            var form = Origin.scaffold.buildForm({
-              model: project
-            });
-            Origin.trigger('location:title:update', {title: window.polyglot.t('app.editcourse')});
-            Origin.editingOverlay.addView(new ProjectDetailView({model: project, form: form}).$el);
-            Origin.sidebar.addView(new ProjectDetailEditSidebarView({form: form}).$el);
-          }
-        });
-        break;
-    }
-
-  });
-
-})
+});

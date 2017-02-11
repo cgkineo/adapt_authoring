@@ -9,7 +9,7 @@ define(function(require) {
   var AssetModel = require('coreJS/assetManagement/models/assetModel');
   var CourseModel = require('editorCourse/models/editorCourseModel');
   var CourseAssetModel = require('editorCourse/models/editorCourseAssetModel');
-  var ProjectCollection = require('coreJS/project/collections/projectCollection');
+  var ProjectCollection = require('coreJS/app/collections/projectCollection');
   var TagsCollection = require('coreJS/tags/collections/tagsCollection');
 
   Origin.on('app:dataReady login:changed', function() {

@@ -7,9 +7,9 @@ define(function(require) {
   var EditorView = require('editorGlobal/views/editorView');
   var EditorModel = require('editorGlobal/models/editorModel');
 
-  var ProjectModel = require('coreJS/project/models/projectModel');
-  var ProjectDetailView = require('coreJS/project/views/projectDetailView');
-  var ProjectDetailEditSidebarView = require('coreJS/project/views/projectDetailEditSidebarView');
+  var ProjectModel = require('coreJS/app/models/projectModel');
+  var ProjectDetailView = require('coreJS/editor/course/views/projectDetailView');
+  var ProjectDetailEditSidebarView = require('coreJS/editor/course/views/projectDetailEditSidebarView');
 
   var EditorConfigModel = require('editorConfig/models/editorConfigModel');
   var EditorCourseModel = require('editorCourse/models/editorCourseModel');

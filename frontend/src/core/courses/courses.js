@@ -1,16 +1,23 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
   var Origin = require('coreJS/app/origin');
-  var CoursesView = require('coreJS/courses/views/coursesView');
   var CoursesSidebarView = require('coreJS/courses/views/coursesSidebarView');
-  var ProjectModel = require('coreJS/project/models/projectModel');
-  var ProjectCollection = require('coreJS/project/collections/ProjectCollection');
+  var CoursesView = require('coreJS/courses/views/coursesView');
+  var ProjectCollection = require('coreJS/app/collections/ProjectCollection');
+  var ProjectDetailView = require('coreJS/editor/course/views/projectDetailView');
+  var ProjectDetailEditSidebarView = require('coreJS/editor/course/views/projectDetailEditSidebarView');
+  var ProjectModel = require('coreJS/app/models/projectModel');
   var TagsCollection = require('coreJS/tags/collections/tagsCollection');
 
   Origin.on('router:courses', onRouterCourses);
+  Origin.on('router:project', onRouterProject);
   Origin.on('courses:loaded', onCoursesLoaded);
   Origin.on('globalMenu:courses:open', onOpenCourses);
   Origin.on('app:dataReady login:changed', onNewSession);
+
+  /**
+  * Event handlers
+  */
 
   function onRouterCourses(location, subLocation, action) {
     Origin.tap('courses', onCoursesTap);
@@ -46,6 +53,11 @@ define(function(require) {
     Origin.router.createView(CoursesView, { collection: new ProjectCollection });
   }
 
+  function onRouterProject(action, id) {
+    if(action === 'new') createNewProject();
+    else if(action === 'edit') editProject(id);
+  }
+
   function onTagFetchSuccess(collection) {
     Origin.sidebar.addView(new CoursesSidebarView({ collection: collection }).$el);
     Origin.trigger('courses:loaded');
@@ -58,6 +70,17 @@ define(function(require) {
       text: window.polyglot.t('app.errorfetchingtags')
     });
     return;
+  }
+
+  /**
+  * The rest
+  */
+
+  function initialiseTags() {
+    (new TagsCollection()).fetch({
+      success: onTagFetchSuccess,
+      error: onTagFetchError
+    });
   }
 
   function updateTitle() {
@@ -114,10 +137,27 @@ define(function(require) {
     ]);
   }
 
-  function initialiseTags() {
-    (new TagsCollection()).fetch({
-      success: onTagFetchSuccess,
-      error: onTagFetchError
+  function createNewProject() {
+    Origin.trigger('location:title:update', { title: window.polyglot.t('app.addnewproject') });
+    // create project with some default settings
+    var project = new ProjectModel({
+      title: window.polyglot.t('app.placeholdernewcourse'),
+      displayTitle: window.polyglot.t('app.placeholdernewcourse')
+    });
+    var form = Origin.scaffold.buildForm({ model: project });
+    Origin.editingOverlay.addView(new ProjectDetailView({ model: project, form: form }).$el);
+    Origin.sidebar.addView(new ProjectDetailEditSidebarView({ form: form }).$el);
+  }
+
+  function editProject(id) {
+    (new ProjectModel({ _id: id })).fetch({
+      success: function(project) {
+        Origin.trigger('location:title:update', { title: window.polyglot.t('app.editcourse') });
+
+        var form = Origin.scaffold.buildForm({ model: project });
+        Origin.editingOverlay.addView(new ProjectDetailView({ model: project, form: form }).$el);
+        Origin.sidebar.addView(new ProjectDetailEditSidebarView({ form: form }).$el);
+      }
     });
   }
 });

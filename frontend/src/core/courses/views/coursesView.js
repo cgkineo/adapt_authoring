@@ -4,8 +4,8 @@ define(function(require) {
   var Handlebars = require('handlebars');
   var Origin = require('coreJS/app/origin');
   var OriginView = require('coreJS/app/views/originView');
-  var ProjectView = require('coreJS/project/views/projectView');
-  var ProjectCollection = require('coreJS/project/collections/projectCollection');
+  var ProjectView = require('coreJS/courses/views/projectView');
+  var ProjectCollection = require('coreJS/app/collections/projectCollection');
 
   var CoursesView = OriginView.extend({
 
