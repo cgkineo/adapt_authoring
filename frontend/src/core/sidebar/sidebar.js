@@ -28,4 +28,4 @@ define(function(require) {
     // Push sidebar to Origin object
     Origin.sidebar = Sidebar;
 
-})
+});

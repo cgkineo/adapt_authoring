@@ -266,7 +266,7 @@ define(function(require){
           if(components.models[0].attributes._layout == 'left')
             this.$('.add-component').addClass('right');
           else
-            this.$('.add-component').addClass('left');  
+            this.$('.add-component').addClass('left');
         }
     },
 
@@ -274,13 +274,7 @@ define(function(require){
       var courseId = Origin.editor.data.course.get('_id');
       var type = this.model.get('_type');
       var Id = this.model.get('_id');
-      Origin.router.navigate('#/editor/'
-        + courseId
-        + '/'
-        + type
-        + '/'
-        + Id
-        + '/edit', {trigger: true});
+      Origin.router.navigateTo('editor/' + courseId + '/' + type + '/' + Id + '/edit');
     },
 
     showComponentList: function(event) {

@@ -1,6 +1,6 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
-    
+
   var Origin = require('coreJS/app/origin');
   var SidebarItemView = require('coreJS/sidebar/views/sidebarItemView');
   var Backbone = require('backbone');
@@ -22,7 +22,7 @@ define(function(require) {
       event.preventDefault();
       var currentCourseId = Origin.editor.data.course.get('_id');
       var currentPageId = this.model.getParent().getParent().getParent().get('_id');
-      Origin.router.navigate('#/editor/' + currentCourseId + '/page/' + currentPageId);
+      Origin.router.navigateTo('editor/' + currentCourseId + '/page/' + currentPageId);
       Origin.trigger('editingOverlay:views:hide');
     }
 

@@ -10,7 +10,7 @@ define(function(require) {
 
   // Origin.on('editorMenuSidebar:postRender', function() {
   Origin.on('editorCommon:theme', function() {
-    Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/' + ROUTE, { trigger: true });
+    Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/' + ROUTE);
   });
 
   Origin.on('router:editor', function(route1, route2, route3, route4) {

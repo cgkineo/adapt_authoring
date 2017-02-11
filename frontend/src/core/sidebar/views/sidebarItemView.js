@@ -142,23 +142,23 @@ define(function(require) {
     */
 
     editProject: function() {
-      Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/settings', {trigger: true});
+      Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/settings');
     },
 
     editConfiguration: function() {
-      Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/config', {trigger: true});
+      Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/config');
     },
 
     selectTheme: function() {
-      Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/selecttheme', {trigger: true});
+      Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/selecttheme');
     },
 
     editMenu: function() {
-      Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/menusettings', {trigger: true});
+      Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/menusettings');
     },
 
     manageExtensions: function() {
-      Origin.router.navigate('#/editor/' + Origin.editor.data.course.get('_id') + '/extensions', {trigger: true});
+      Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/extensions');
     },
 
     downloadProject: function() {
@@ -182,7 +182,7 @@ define(function(require) {
     },
 
     closeProject: function() {
-      Origin.router.navigate('#/dashboard');
+      Origin.router.navigateToDashboard();
     }
   });
 

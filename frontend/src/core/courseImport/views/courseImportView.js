@@ -95,7 +95,7 @@ define(function(require){
       // change upload button label
       this.$('label[for=file] .btn-label').html(title);
       this.$('label[for=file]').removeClass('validation-error').addClass('selected');
-    },
+    }
   }, {
     template: 'courseImport'
   });

@@ -62,19 +62,15 @@ define(function(require){
     },
 
     editProjectSettings: function(event) {
-      if (event) {
-        event.preventDefault();
-      }
-
-      Origin.router.navigate('#/editor/' + this.model.get('_id') + '/settings', { trigger: true });
+      event && event.preventDefault();
+      Origin.router.navigateTo('editor/' + this.model.get('_id') + '/settings');
     },
 
     editProject: function(event) {
-      if (event) {
-        event.preventDefault();
+      event && event.preventDefault();
+      if(this.model.isEditable()) {
+        Origin.router.navigateTo('editor/' + this.model.get('_id') + '/menu');
       }
-
-      Origin.router.navigate('#/editor/' + this.model.get('_id') + '/menu', { trigger: true });
     },
 
     selectProject: function(event) {
@@ -144,7 +140,7 @@ define(function(require){
       $.ajax({
         url: this.model.getDuplicateURI(),
         success: function (data) {
-          Origin.router.navigate('/editor/' + data.newCourseId + '/settings', {trigger: true});
+          Origin.router.navigateTo('editor/' + data.newCourseId + '/settings');
         },
         error: function() {
           Origin.Notify.alert({

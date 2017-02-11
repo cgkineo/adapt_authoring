@@ -11,12 +11,12 @@ define(function(require) {
 
     addUser: function(e) {
       e && e.preventDefault();
-      Origin.router.navigate('#/userManagement/addUser', { trigger: true });
+      Origin.router.navigateTo('userManagement/addUser');
     },
 
     addMultipleUsers: function(e) {
       e && e.preventDefault();
-      Origin.router.navigate('#/userManagement/addMultipleUsers', { trigger: true });
+      Origin.router.navigateTo('userManagement/addMultipleUsers');
     }
   }, {
     template: 'userManagementSidebar'

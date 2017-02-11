@@ -17,7 +17,7 @@ define(function(require) {
 
     goBack: function(e) {
       e && e.preventDefault();
-      Origin.router.navigate('#/userManagement', { trigger: true });
+      Origin.router.navigateTo('userManagement');
     }
   }, {
     template: 'addUserSidebar'

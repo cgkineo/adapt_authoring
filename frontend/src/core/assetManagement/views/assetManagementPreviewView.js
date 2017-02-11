@@ -58,7 +58,7 @@ define(function(require){
     onEditButtonClicked: function(e) {
       e && e.preventDefault();
       var assetId = this.model.get('_id');
-      Origin.router.navigate('#/assetManagement/' + assetId + '/edit', { trigger: true });
+      Origin.router.navigateTo('assetManagement/' + assetId + '/edit');
     },
 
     onDeleteButtonClicked: function(e) {
