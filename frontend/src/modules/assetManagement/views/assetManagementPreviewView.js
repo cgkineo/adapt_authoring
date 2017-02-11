@@ -41,7 +41,7 @@ define(function(require){
         mejs.plugins.silverlight[0].types.push('video/x-ms-wmv');
         mejs.plugins.silverlight[0].types.push('audio/x-ms-wma');
         var mediaElement = this.$('audio, video').mediaelementplayer({
-          pluginPath:'adaptbuilder/css/assets/',
+          pluginPath:'/css/assets/',
           features: ['playpause','progress','current','duration']
         });
       }

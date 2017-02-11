@@ -15,7 +15,7 @@ define(function(require){
             return '?' + new Date().getTime()
           }
         },
-
+        
         getAssetIcon: function(mimeType) {
           var type = mimeType.split('/')[0];
           var subType = mimeType.split('/')[1];
