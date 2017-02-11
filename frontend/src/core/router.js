@@ -38,7 +38,8 @@ define(function(require) {
 
     navigateTo: function(route, options) {
       options = options || { trigger: true };
-      this.navigate('#/' + route, options);
+      if(route.slice(0,2) !== '#/') route = '#/' + route;
+      this.navigate(route, options);
     },
 
     navigateToLogin: function() {

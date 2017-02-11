@@ -15,7 +15,7 @@ define(function(require) {
     },
 
     onAddNewAssetClicked: function() {
-      Origin.router.navigateTo('#/assetManagement/new');
+      Origin.router.navigateTo('assetManagement/new');
     }
   }, {
     template: 'assetManagementSidebar'
