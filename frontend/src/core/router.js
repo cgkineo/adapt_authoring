@@ -31,7 +31,7 @@ define(function(require) {
       // TODO localise
       Origin.Notify.alert({
         type: 'error',
-        text: 'You don\'t have permission to access this area.',
+        text: window.polyglot.t('app.notallowed'),
         callback: this.navigateToDashboard.bind(this)
       });
     },
