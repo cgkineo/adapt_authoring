@@ -3,32 +3,29 @@
  * Adapt Output plugin
  */
 var _ = require('underscore');
-var archiver = require('archiver');
-var assetmanager = require('../../../lib/assetmanager');
+var archive = require('archiver')('zip');
 var async = require('async');
-var configuration = require('../../../lib/configuration');
-var Constants = require('../../../lib/outputmanager').Constants;
 var exec = require('child_process').exec;
-var crypto = require('crypto');
-var database = require('../../../lib/database');
-var filestorage = require('../../../lib/filestorage');
-var fs = require('fs');
-var fse = require('fs-extra');
-var glob = require('glob');
-var helpers = require('../../../lib/helpers');
-var IncomingForm = require('formidable').IncomingForm;
-var logger = require('../../../lib/logger');
+var fs = require('fs-extra');
 var mkdirp = require('mkdirp');
 var ncp = require('ncp').ncp;
-var origin = require('../../../')();
-var OutputPlugin = require('../../../lib/outputmanager').OutputPlugin;
 var path = require('path');
 var rimraf = require('rimraf');
 var semver = require('semver');
-var usermanager = require('../../../lib/usermanager');
 var util = require('util');
+
+var assetmanager = require('../../../lib/assetmanager');
+var database = require('../../../lib/database');
+var configuration = require('../../../lib/configuration');
+var Constants = require('../../../lib/outputmanager').Constants;
+var filestorage = require('../../../lib/filestorage');
+var helpers = require('../../../lib/helpers');
+var logger = require('../../../lib/logger');
+var OutputPlugin = require('../../../lib/outputmanager').OutputPlugin;
+var usermanager = require('../../../lib/usermanager');
 var version = require('../../../version');
 
+var origin = require('../../../');
 
 function AdaptOutput() {
 }
@@ -41,13 +38,14 @@ var self;
 * ------------------------------------------------------------------------------
 */
 AdaptOutput.prototype.publish = function(courseId, isPreview, request, response, next) {
-  self = this;
-  var user = usermanager.getCurrentUser(),
-    tenantId = user.tenant._id,
-    outputJson = {},
-    isRebuildRequired = false,
-    themeName = '',
-    menuName = Constants.Defaults.MenuName;
+  var app = origin();
+  var self = this;
+  var user = usermanager.getCurrentUser();
+  var tenantId = user.tenant._id;
+  var outputJson = {};
+  var isRebuildRequired = false;
+  var themeName = '';
+  var menuName = Constants.Defaults.MenuName;
 
   var resultObject = {};
 
@@ -197,7 +195,7 @@ AdaptOutput.prototype.publish = function(courseId, isPreview, request, response,
                   resultObject.success = true;
 
                   // Indicate that the course has built successfully
-                  origin.emit('previewCreated', tenantId, courseId, outputFolder);
+                  app.emit('previewCreated', tenantId, courseId, outputFolder);
 
                   return callback(null, 'Framework built OK');
                 }
@@ -227,15 +225,14 @@ AdaptOutput.prototype.publish = function(courseId, isPreview, request, response,
           // Now zip the build package
           var filename = path.join(COURSE_FOLDER, Constants.Filenames.Download);
           var zipName = helpers.slugify(outputJson['course'].title);
-          var output = fs.createWriteStream(filename),
-            archive = archiver('zip');
+          var output = fs.createWriteStream(filename);
 
           output.on('close', function() {
             resultObject.filename = filename;
             resultObject.zipName = zipName;
 
             // Indicate that the zip file is ready for download
-            origin.emit('zipCreated', tenantId, courseId, filename, zipName);
+            app.emit('zipCreated', tenantId, courseId, filename, zipName);
 
             callback();
           });
@@ -814,7 +811,6 @@ function getCourseMetdata(courseId, gotCourseMetadata) {
     var metadata = {
       course: {}
     };
-
     async.each(Object.keys(Constants.CourseCollections), function iterator(collectionType, doneIterator) {
       var criteria = collectionType === 'course' ? { _id: courseId } : { _courseId: courseId };
       db.retrieve(collectionType, criteria, {operators: { sort: { _sortOrder: 1}}}, function dbRetrieved(error, results) {

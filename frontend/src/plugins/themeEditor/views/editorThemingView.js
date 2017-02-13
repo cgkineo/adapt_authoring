@@ -27,8 +27,6 @@ define(function(require){
     },
 
     initialize: function() {
-      Origin.trigger('location:title:update', { title: window.polyglot.t('app.themingtitle') });
-
       this.listenTo(this, 'dataReady', this.render);
       this.listenTo(Origin, 'editorThemingSidebar:views:save', this.saveData);
       this.listenTo(Origin, 'editorThemingSidebar:views:savePreset', this.onSavePresetClicked);
@@ -47,6 +45,12 @@ define(function(require){
 
     render: function() {
       EditorOriginView.prototype.render.apply(this, arguments);
+
+      Origin.trigger('location:title:update', {
+        breadcrumbs: ['dashboard','course', { title: window.polyglot.t('app.themeeditor') }],
+        title: window.polyglot.t('app.themingtitle')
+      });
+
       this.renderForm();
     },
 
@@ -56,10 +60,17 @@ define(function(require){
       var selectedTheme = this.getSelectedTheme();
 
       if(this.themeIsEditable(selectedTheme)) {
-        this.form = Origin.scaffold.buildForm({
-          model: selectedTheme,
-          schemaType: selectedTheme.get('theme')
-        });
+        this.$('.tile.preset').show();
+        this.$('.buttons-container').show();
+        try {
+          this.form = Origin.scaffold.buildForm({
+            model: selectedTheme,
+            schemaType: selectedTheme.get('theme')
+          });
+        }
+        catch(e) {
+          console.log(e);
+        }
 
         if(this.form) {
           this.$('.form-container').html(this.form.el);
@@ -73,6 +84,9 @@ define(function(require){
 
         var toRestore = Origin.editor.data.course.get('themeSettings') || this.getDefaultThemeSettings();
         this.restoreFormSettings(toRestore);
+      } else {
+        this.$('.tile.preset').hide();
+        this.$('.buttons-container').hide();
       }
     },
 
@@ -167,6 +181,9 @@ define(function(require){
 
       for(var key in toRestore) {
         var view = this.form.fields[key];
+        if(!view) {
+          continue;
+        }
         if(view.schema.fieldType === 'ColorPicker') {
           view.setValue(toRestore[key]);
         }

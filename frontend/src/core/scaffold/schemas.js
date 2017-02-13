@@ -10,16 +10,15 @@ define(function(require) {
             // Remove any extensions and components that are not enabled on this course
             var enabledExtensions = configModel.get('_enabledExtensions');
             var enabledExtensionsKeys = [];
-
             // Grab the targetAttribute
             _.each(enabledExtensions, function(value, key) {
                 enabledExtensionsKeys.push(value.targetAttribute);
             });
 
-
-
-            // Get the schema
-            var schema = JSON.parse(JSON.stringify(Origin.schemas.get(schemaName)));
+            var schema = Origin.schemas.get(schemaName);
+            if(!schema) {
+              throw new Error('No schema found for \'' + schemaName + '\'');
+            }
             // Compare the enabledExtensions against the current schemas
             if (schema._extensions) {
                 _.each(schema._extensions.properties, function(value, key) {
@@ -101,14 +100,14 @@ define(function(require) {
             // Return the modified schema
             return schema;
         } else {
-            var schema = JSON.parse(JSON.stringify(Origin.schemas.get(schemaName)));
+            var schema = Origin.schemas.get(schemaName);
             delete schema._extensions;
             // Remove globals as these are appended to the course model
             delete schema.globals;
+            // assumption that no menu or theme applied, so don't show settings
+            delete schema.themeSettings;
+            delete schema.menuSettings;
 
-            if(!schema.themeSettings.properties) delete schema.themeSettings;
-            if(!schema.menuSettings.properties) delete schema.menuSettings;
-            
             return schema;
         }
     };
