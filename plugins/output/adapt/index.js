@@ -728,6 +728,8 @@ var blacklistedProps = [
   '_hasPreview'
 ];
 
+const exportfix = require('./exportfix');
+
 AdaptOutput.prototype.export = function(pCourseId, devMode, request, response, pNext) {
   self = this;
   // store the params
@@ -757,7 +759,7 @@ AdaptOutput.prototype.export = function(pCourseId, devMode, request, response, p
       if(error) {
         return next(error);
       }
-      zipExport();
+      exportfix(EXPORT_DIR, zipExport);
     });
   });
 
