@@ -86,6 +86,7 @@ function fixContent(data) {
     if(jsonIndex === -1) {
       continue;
     }
+    console.log(`- Removing ${contentJson._id}`);
     updatedContent.splice(jsonIndex, 1);
     filesChanged[CONTENT_MAP[contentJson._type]] = updatedContent;
   }
