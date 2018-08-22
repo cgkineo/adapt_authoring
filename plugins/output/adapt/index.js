@@ -275,6 +275,7 @@ var blacklistedProps = [
   'updatedBy',
   '_hasPreview'
 ];
+const exportfix = require('./exportfix');
 
 AdaptOutput.prototype.export = function(pCourseId, request, response, pNext) {
   self = this;
@@ -293,7 +294,9 @@ AdaptOutput.prototype.export = function(pCourseId, request, response, pNext) {
       generateLatestBuild: generateLatestBuild,
       copyFrameworkFiles: ['generateLatestBuild', copyFrameworkFiles],
       copyCourseFiles: ['generateLatestBuild', copyCourseFiles]
-    }, zipExport);
+    }, function(error) {
+      exportfix(EXPORT_DIR, zipExport);
+    });
   });
 };
 
