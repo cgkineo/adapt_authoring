@@ -44,7 +44,7 @@ function checkJson(cb) {
   }
   async.eachOf(filesChanged, (contents, file, doneEach) => {
     const filepath = path.join(JSON_ROOT, file);
-    fs.writeJSON(filepath, contents, { spaces: 2 }).then(doneEach).catch(doneEach);
+    fs.writeJSON(filepath, contents, { spaces: 2 }, doneEach);
   }, cb);
 }
 
@@ -95,13 +95,16 @@ function fixContent(data) {
 
 function removeBuildIncludes(cb) {
   const configPath = path.join(exportDir, 'src', 'course', 'config.json');
-  fs.readJson(configPath).then((config) => {
+  fs.readJson(configPath, (error, config) => {
+    if(error) {
+      return cb(error);
+    }
     if(!config.build) {
       return cb();
     }
     delete config.build;
-    fs.writeJSON(configPath, config, { spaces: 2 }).then(cb).catch(cb);
-  }).catch(cb);
+    fs.writeJSON(configPath, config, { spaces: 2 }, cb);
+  });
 }
 
 module.exports = processExport;
