@@ -1,0 +1,57 @@
+<div class="filters hidden">
+  <div class="title">{{t 'app.filters'}}</div>
+  <div class="description">{{t 'app.filtersdesc'}}</div>
+  {{#if projectTags.length}}
+    <div class="filter">
+      <div class="title">{{t 'app.project'}}</div>
+      <div class="tags">
+        {{#each projectTags}}
+          <button class="tag {{#ifValueEquals ../tagFilter attributes._id}}selected{{/ifValueEquals}}" data-id="{{attributes._id}}">{{attributes.title}}</button>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+</div>
+<div class="inner">
+  {{#if projectTags.length}}
+    <div class="header col-row tb-row">
+      <div class="col-10">
+        <button class="sort" data-id="module">
+          {{t 'app.id'}}
+          {{tagFilterStatus 'module' this}}
+        </button>
+      </div>
+      <div class="col-40">
+        <button class="sort" data-id="title">
+          {{t 'app.title'}}
+          {{tagFilterStatus 'title' this}}
+        </button>
+      </div>
+      <div class="col-20">
+        <button class="sort" data-id="date">
+          {{t 'app.updatedat'}}
+          {{tagFilterStatus 'date' this}}
+        </button>
+      </div>
+      <div class="col-30">
+        <button class="sort" data-id="project">
+          {{t 'app.project'}}
+          {{tagFilterStatus 'project' this}}
+        </button>
+      </div>
+    </div>
+    <div class="courses">
+      {{#each courses.models}}
+        {{#if ../tagFilter}}
+          {{#ifValueEquals ../../tagFilter attributes.projectTag._id}}
+            {{> part_tagMapCourse attributes}}
+          {{/ifValueEquals}}
+        {{else}}
+          {{> part_tagMapCourse attributes}}
+        {{/if}}
+      {{/each}}
+    </div>
+  {{else}}
+    {{t 'app.notags'}}
+  {{/if}}
+</div>
