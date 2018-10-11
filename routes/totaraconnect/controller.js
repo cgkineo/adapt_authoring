@@ -298,16 +298,16 @@ function generateCourseQuery(query) {
   var formatted = {};
 
   if(query.search) {
-    var pattern = new RegExp(query.search, `i`);
+    var pattern = regexWrap(query.search);
     formatted.$or = [
       { title: pattern },
       { displayTitle: pattern },
       { description: pattern }
     ];
   } else {
-    if(query.title) formatted.title = query.title;
-    if(query.displayTitle) formatted.displayTitle = query.displayTitle;
-    if(query.description) formatted.description = query.description;
+    if(query.title) formatted.title = regexWrap(query.title);
+    if(query.displayTitle) formatted.displayTitle = regexWrap(query.displayTitle);
+    if(query.description) formatted.description = regexWrap(query.description);
   }
   // NOTE tags are expected as a comma-separated array of tag _ids
   if(query.tags) {
@@ -344,6 +344,11 @@ function generateCourseQuery(query) {
   }
 
   return formatted
+}
+
+function regexWrap(text) {
+  if(!text) return;
+  return new RegExp(text, `i`);
 }
 
 function canViewCourse(user, courseId, cb) {
