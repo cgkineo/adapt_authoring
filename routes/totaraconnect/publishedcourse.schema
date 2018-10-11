@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "http://jsonschema.net",
+  "properties": {
+    "course": {
+      "type":"objectid",
+      "required":true,
+      "ref": "course",
+      "editorOnly": true
+    },
+    "_tenantId":{
+      "type":"objectid",
+      "required":true,
+      "editorOnly": true
+    },
+    "publishedAt": {
+      "type": "date",
+      "required": false,
+      "editorOnly": true
+    }
+  }
+}

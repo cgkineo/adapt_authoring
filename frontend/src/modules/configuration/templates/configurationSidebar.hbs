@@ -1,0 +1,12 @@
+<div class="separator"></div>
+<div class="sidebar-item-inner">
+  <div class="buttons">
+    {{#if subViews}}
+      {{#each subViews}}
+        <div class="sidebar-row">
+          <button data-id="{{this}}" class="button">{{this}}</button>
+        </div>
+      {{/each}}
+    {{/if}}
+  </div>
+</div>

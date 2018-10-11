@@ -1,0 +1,20 @@
+<div class="description">
+  {{{t 'app.totaraconnectdescription'}}}
+</div>
+
+<div class="generateForm">
+  <button type="button" name="generateToken" class="primary">{{t 'app.generatetoken'}}</button>
+  <div class="newToken display-none">
+    <code class="tokenString"></code>
+    <button type="button" name="copy" class="secondary">{{t 'app.copytoclipboard'}}</button>
+  </div>
+</div>
+
+<div class="tokensContainer display-none">
+  <div class="description">
+    {{{t 'app.totaraconnecttokenlisttext'}}}
+  </div>
+  <div class="tokens">
+    {{! tokens will be rendered here}}
+  </div>
+</div>

@@ -1,0 +1,65 @@
+@import 'colours';
+
+.editor-sidebar-publish.disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+  &:hover {
+    color: inherit;
+    background: transparent;
+  }
+}
+
+.totaraconnect {
+  .description {
+    margin-bottom: 20px;
+  }
+
+  .generateForm {
+    margin-bottom: 20px;
+  }
+
+  button.pending {
+    opacity: 0.3;
+    cursor: default;
+    transition-property: 'all';
+    transition-duration: 0.3s;
+  }
+
+  .tokenString {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: @tertiary-color;
+    border: none;
+    border-radius: 3px;
+    display: block;
+    word-break: break-all;
+    color: white;
+  }
+
+  .tokens {
+    .token {
+      padding: 5px 0;
+      margin-bottom: 10px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      .attribute {
+        display: inline-block;
+        padding: 10px;
+        border-right: 1px solid rgba(0,0,0,0.15);
+      }
+      button[name="delete"] {
+        padding: 5px 8px;
+        margin-left: 5px;
+      }
+      &.new {
+        border-color: @primary-color;
+        color: @primary-color;
+        font-style: italic;
+      }
+    }
+    .label {
+      font-weight: bold;
+    }
+  }
+}

@@ -69,6 +69,7 @@
     "hbs": "^4.0.1",
     "jshint-stylish": "^2.2.1",
     "json-schema-mapper": "0.0.2",
+    "jsonwebtoken": "^8.1.1",
     "junk": "^2.1.0",
     "less": "^3.0.4",
     "log-update": "^2.3.0",

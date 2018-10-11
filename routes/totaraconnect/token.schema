@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "http://jsonschema.net",
+  "properties": {
+    "user": {
+      "type":"objectid",
+      "required":true,
+      "ref": "user",
+      "editorOnly": true
+    },
+    "_tenantId":{
+      "type":"objectid",
+      "required":true,
+      "ref": "tenant",
+      "editorOnly": true
+    },
+    "expiresAt": {
+      "type": "date",
+      "required": true,
+      "editorOnly": true
+    },
+    "createdAt": {
+      "type": "date",
+      "required": false,
+      "editorOnly": true
+    },
+    "lastAccessedAt": {
+      "type": "date",
+      "required": false,
+      "editorOnly": true
+    }
+  }
+}

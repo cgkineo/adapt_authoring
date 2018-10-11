@@ -1,0 +1,9 @@
+<div data-id="{{_id}}" class="token">
+  <div class="attribute label">{{number}}</div>
+  <div class="attribute"><span class="label">Created:</span> {{formatDate createdAt}}</div>
+  <div class="attribute"><span class="label">Expires:</span> {{formatDate expiresAt}}</div>
+  {{#if lastAccessedAt}}
+    <div class="attribute"><span class="label">Last used:</span> {{formatDate lastAccessedAt}}</div>
+  {{/if}}
+  <button type="button" name="delete" class="btn alert">{{t 'app.delete'}}</button>
+</div>
