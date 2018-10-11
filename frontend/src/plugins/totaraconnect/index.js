@@ -58,4 +58,17 @@ define(function(require) {
       });
     });
   }
+
+  Handlebars.registerHelper('formatDate', function(timestamp, noZero) {
+    var noDisplay = '-';
+    if(typeof(timestamp) === 'undefined') {
+      return noDisplay;
+    }
+    var date = new Date(timestamp); // 2014-02-17T17:00:34.196Z
+    // optionally use noDisplay char if 0 dates are to be interpreted as such
+    if (noZero && 0 === date.valueOf()) {
+      return noDisplay;
+    }
+    return date.toDateString();
+  });
 });
