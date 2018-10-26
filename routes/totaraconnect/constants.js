@@ -11,6 +11,7 @@ module.exports = {
       Publish: "Course published successfully"
     },
     Fail: {
+      UnknownRoute: "Unrecognised API route",
       UserAuth: "Cannot authenticate user",
       NoCourse: "No course specified",
       NoSecret: "A 'jwtSecret' value needs to be defined in config.json",

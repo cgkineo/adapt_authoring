@@ -16,17 +16,20 @@ var token = require('./token');
 module.exports = {
   crudWrapper: function(router) {
     return {
-      get: function(route, callback) {
-        router.route(route).get(callback);
+      get: function(route, ...callback) {
+        router.route(route).get(...callback);
       },
-      put: function(route, callback) {
-        router.route(route).put(callback);
+      put: function(route, ...callback) {
+        router.route(route).put(...callback);
       },
-      post: function(route, callback) {
-        router.route(route).post(callback);
+      post: function(route, ...callback) {
+        router.route(route).post(...callback);
       },
-      delete: function(route, callback) {
+      delete: function(route, ...callback) {
         router.route(route).delete(callback);
+      },
+      unmatched: function(...callback) {
+        router.route('*').all(...callback);
       }
     };
   },
@@ -275,6 +278,9 @@ module.exports = {
         });
       });
     });
+  },
+  handleUnmatched: function(req, res, next) {
+    res.status(404).json({ type: HttpConsts['404'], message: ErrorConsts.UnknownRoute });
   }
 };
 
