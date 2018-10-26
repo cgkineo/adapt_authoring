@@ -10,6 +10,7 @@ var OutputConstants = require('../../lib/outputmanager').Constants;
 var Constants = require('./constants');
 var SuccessConsts = Constants.Messages.Success;
 var ErrorConsts = Constants.Messages.Fail;
+var HttpConsts = Constants.Messages.HttpStatuses;
 var errors = require('./errors');
 var token = require('./token');
 
@@ -35,6 +36,9 @@ module.exports = {
   },
   authenticate: function(req, res, next) {
     var tokenVal = decodeAuthHeader(req).token;
+    if(!tokenVal) {
+      return next(errors.AuthorisationError(ErrorConsts.NoToken));
+    }
     var tokenPermissions = {
       action: 'read',
       route: `/${Constants.Route}`
@@ -78,6 +82,9 @@ module.exports = {
     }
     // request hasn't come from the client, so expect basic auth
     var headerData = decodeAuthHeader(req);
+    if(!headerData) {
+      return next(errors.AuthorisationError(ErrorConsts.NoAuth));
+    }
     var creds = new Buffer(headerData.token, 'base64').toString().split(':');
     var email = creds[0];
     var password = creds[1];
@@ -111,18 +118,18 @@ module.exports = {
   },
   deleteToken: function(req, res, next) {
     if(!req.user) {
-      return next(token.AuthorisationError(ErrorConsts.UserAuth));
+      return next(errors.AuthorisationError(ErrorConsts.UserAuth));
     }
     // make sure we only try to delete tokens owned by the request user
     origin.db.destroy('token', { _id: req.params.id, user: req.user._id }, function(error, results) {
       if(error) {
         return next(errors.ServerError(error));
       }
-      res.status(200).send(SuccessConsts.TokenRevoke);
+      res.status(200).json({ message: SuccessConsts.TokenRevoke });
     });
   },
   testConnection: function(req, res, next) {
-    res.status(200).send(SuccessConsts.ConnectionTest);
+    res.status(200).json({ message: SuccessConsts.ConnectionTest });
   },
   getCourses: function(req, res, next) {
     var whitelistedAttributes = [
@@ -223,7 +230,7 @@ module.exports = {
                 };
                 var _callback = function(error, results) {
                   if(error) return next(errors.ServerError(error));
-                  res.status(200).send(SuccessConsts.Publish);
+                  res.status(200).json({ message: SuccessConsts.Publish });
                 };
                 origin.db.retrieve(modelName, query, function(error, results) {
                   if(error) {
@@ -358,8 +365,11 @@ function regexWrap(text) {
 }
 
 function canViewCourse(user, courseId, cb) {
+  if(!user) {
+    return cb(errors.RequestError(ErrorConsts.UserAuth));
+  }
   if(!courseId) {
-    return next(errors.RequestError(ErrorConsts.NoCourse));
+    return cb(errors.RequestError(ErrorConsts.NoCourse));
   }
   permissions.hasPermission(user._id, 'read', permissions.buildResourceString(user._tenantId, `/api/course/${courseId}`), function(error, hasPermission) {
     if(error) {

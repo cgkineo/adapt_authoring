@@ -1,5 +1,5 @@
 var logger = require('../../lib/logger');
-var Constants = require('./constants');
+var HttpStatuses = require('./constants').Messages.HttpStatuses;
 
 module.exports = {
   AuthorisationError: function(error, statusCode) {
@@ -15,13 +15,14 @@ module.exports = {
     if(!error.status) {
       error.status = 500;
     }
-    logger.log('error', `totaraconnect: ${error.name}[${error.status}] ${error.message}`);
+    logger.log('error', `totaraconnect: ${req.method} ${req.url} ${error.name}[${error.status}] ${error.message}`);
     if(error.status === 500) console.log(error.stack);
-    /**
-    * Return the error's message for 400-range client errors (except 401s...for security reasons)
-    */
-    var isClientError = error.status.toString()[0] === '4' && error.status !== 401;
-    res.status(error.status).send((isClientError) ? error.message : Constants.Messages.HttpStatuses[error.status]);
+    // Return the error's message for 400-range errors, or a generic one otherwise
+    var isClientError = error.status.toString()[0] === '4';
+    res.status(error.status).json({
+      type: error.name,
+      message: isClientError ? error.message : HttpStatuses[error.status]
+    });
   }
 };
 

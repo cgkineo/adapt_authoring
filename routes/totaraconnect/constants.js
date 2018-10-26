@@ -22,14 +22,16 @@ module.exports = {
       TokenGen: "Failed to generate authorisation token",
       TokenInvalid: "Authorisation token is not valid",
       TokenNoData: "Didn't generate token, no data passed",
+      NoToken: "Expected an authorisation token",
+      NoAuth: "Expected authorisation header",
       UnexpectedToken: "Expected an authorisation token, received ",
       PermissionsCheck: "Failed permissions check",
       InvalidQuery: "Invalid value passed with query for "
     },
     HttpStatuses: {
       400: "Bad client request",
-      401: "Server couldn't authenticate request",
-      404: "Server couldn't find requested resource",
+      401: "Authentication failed",
+      404: "Resource Not Found",
       500: "Internal server error"
     }
   }
