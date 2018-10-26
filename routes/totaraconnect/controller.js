@@ -173,23 +173,15 @@ module.exports = {
       if(courseId && publishKeys.indexOf(courseId) === -1) {
         return next(errors.RequestError(ErrorConsts.CourseUnknown, 403));
       }
-      origin.contentmanager.getContentPlugin('course', function(error, plugin) {
+      // format the input query so Mongoose can understand it
+      origin.db.retrieve('course', courseQuery, { tenantId: tenantId }, function(error, courses) {
         if(error) {
-          return next(errors.ServerError(error));
+          return next(error.name === 'CastError' ? errors.RequestError(error) : errors.ServerError(error));
         }
-        // format the input query so Mongoose can understand it
-        plugin.retrieve(courseQuery, { tenantId: tenantId }, function(error, courses) {
-          if(error) {
-            if(error.name === 'CastError') {
-              return next(errors.RequestError(error));
-            }
-            return next(errors.ServerError(error));
-          }
-          // only return the whitelistedAttributes (and the 'publishedAt' date)
-          res.status(200).json(_.map(courses, function(course) {
-            return _.extend({}, _.pick(course, whitelistedAttributes), { publishedAt: publishMap[course._id] });
-          }));
-        });
+        // only return the whitelistedAttributes (and the 'publishedAt' date)
+        res.status(200).json(_.map(courses, function(course) {
+          return _.extend({}, _.pick(course, whitelistedAttributes), { publishedAt: publishMap[course._id] });
+        }));
       });
     });
   },
