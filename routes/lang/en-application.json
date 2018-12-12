@@ -337,7 +337,4 @@
   "app.reset": "Reset",
   "app.titlelock": "Link with title",
   "app.titleunlock": "Unlink from title",
-  "app.revoke": "Revoke",
-  "app.never": "Never",
-  "app.published": "Published"
 }

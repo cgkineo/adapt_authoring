@@ -5,10 +5,13 @@
   "app.generatetoken": "Generate new token",
   "app.copytoclipboard": "Copy to clipboard",
   "app.copytokensuccess": "Token copied to clipboard.<br/><br/>Save this token in a Totara instance with Totara Connect installed.",
+  "app.revoke": "Revoke",
   "app.deletetokenconfirm": "Deleting this token will block any applications using it from accessing the API. <br/><br/>Do you want to continue?",
   "app.deletetokensuccess": "Token has been revoked.",
-  "app.publish": "Publish",
+  "app.publish": "Publish to Totara",
   "app.publishing": "Publishing...",
+  "app.published": "Published",
   "app.publishsuccess": "Course published successfully.<br/><br/>It will now be available for selection in any linked Totara installs.",
-  "app.publishdisabled": "SCORM tracking must be enabled before course can be published.<br/><br/>You can do this by adding the <b>Spoor</b> plugin in <b>Manage extensions</b>"
+  "app.publishdisabled": "SCORM tracking must be enabled before course can be published.<br/><br/>You can do this by adding the <b>Spoor</b> plugin in <b>Manage extensions</b>",
+  "app.never": "Never"
 }
