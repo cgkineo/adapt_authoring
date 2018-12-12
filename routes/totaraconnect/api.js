@@ -8,14 +8,17 @@ var crud = controller.crudWrapper(router);
 
 crud.get('/', (req, res, next) => {
   const URL = configuration.getConfig('rootUrl') + req.originalUrl;
+  // ensures a trailing slash
+  if(URL[URL.length-1] !== '/') URL += '/';
+
   res.json({
-    generate_token_url: `${URL}/generatetoken`,
-    publish_course_url: `${URL}/publish/{id}`,
-    tokens_url: `${URL}/tokens`,
-    token_url: `${URL}/token/{id}`,
-    test_connection_url: `${URL}/testconnection`,
-    courses_url: `${URL}/courses`,
-    scorm_url: `${URL}/scorm/{id}`
+    generate_token_url: `${URL}generatetoken`,
+    publish_course_url: `${URL}publish/{id}`,
+    tokens_url: `${URL}tokens`,
+    token_url: `${URL}token/{id}`,
+    test_connection_url: `${URL}testconnection`,
+    courses_url: `${URL}courses`,
+    scorm_url: `${URL}scorm/{id}`
   });
 });
 // UI endpoints
