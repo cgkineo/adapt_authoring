@@ -1,4 +1,5 @@
 var auth = require('../../lib/auth');
+var async = require('async');
 var fs = require('fs-extra');
 var configuration = require('../../lib/configuration');
 var logger = require('../../lib/logger');
@@ -35,6 +36,9 @@ module.exports = {
     };
   },
   authenticate: function(req, res, next) {
+    if(req.user) {
+      return next();
+    }
     var tokenVal = decodeAuthHeader(req).token;
     if(!tokenVal) {
       return next(errors.AuthorisationError(ErrorConsts.NoToken));
@@ -50,6 +54,9 @@ module.exports = {
     });
   },
   memoiseUser: function(req, res, next) {
+    if(req.user) {
+      return next();
+    }
     origin.usermanager.retrieveUser({ _id: req.tokenData.user }, { jsonOnly: true }, function(error, user) {
       if(error) {
         return next(errors.ServerError(error));
@@ -111,7 +118,8 @@ module.exports = {
         return {
           _id: item._id,
           createdAt: item.createdAt,
-          expiresAt: item.expiresAt
+          expiresAt: item.expiresAt,
+          consumedAt: item.consumedAt
         };
       }));
     });
@@ -178,10 +186,18 @@ module.exports = {
         if(error) {
           return next(error.name === 'CastError' ? errors.RequestError(error) : errors.ServerError(error));
         }
-        // only return the whitelistedAttributes (and the 'publishedAt' date)
-        res.status(200).json(_.map(courses, function(course) {
-          return _.extend({}, _.pick(course, whitelistedAttributes), { publishedAt: publishMap[course._id] });
-        }));
+        const courseData = [];
+
+        async.each(courses, function(course, doneAsync) {
+          getCourseSize(course, function(error, size) {
+            // only return the whitelistedAttributes (and the 'publishedAt' date & size)
+            courseData.push(_.extend({}, _.pick(course, whitelistedAttributes), { publishedAt: publishMap[course._id], size: size }));
+            doneAsync();
+          });
+        }, function(error, done) {
+          if(error) return next(error);
+          res.status(200).json(courseData);
+        });
       });
     });
   },
@@ -253,15 +269,7 @@ module.exports = {
         if(results.length === 0) {
           return next(errors.RequestError(ErrorConsts.CourseUnknown, 404));
         }
-        var zipPath = path.join(
-          configuration.tempDir,
-          configuration.getConfig('masterTenantID'),
-          OutputConstants.Folders.Framework,
-          OutputConstants.Folders.AllCourses,
-          results[0]._tenantId.toString(),
-          courseId,
-          Constants.Filenames.Publish
-        );
+        const zipPath = getCourseZipPath({ _id: courseId, _tenantId: results[0]._tenantId });
         fs.stat(zipPath, function(error, stat) {
           if(error) {
             return next(errors.ServerError(error));
@@ -349,6 +357,22 @@ function generateCourseQuery(query) {
   }
 
   return formatted
+}
+
+function getCourseZipPath(course) {
+  return path.join(
+    configuration.tempDir,
+    configuration.getConfig('masterTenantID'),
+    OutputConstants.Folders.Framework,
+    OutputConstants.Folders.AllCourses,
+    course._tenantId.toString(),
+    course._id.toString(),
+    Constants.Filenames.Publish
+  );
+}
+
+function getCourseSize(course, done) {
+  fs.stat(getCourseZipPath(course), (error, stats) => done(error, stats.size));
 }
 
 function regexWrap(text) {

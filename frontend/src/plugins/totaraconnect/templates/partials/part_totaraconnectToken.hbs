@@ -2,8 +2,6 @@
   <div class="attribute label">{{number}}</div>
   <div class="attribute"><span class="label">Created:</span> {{formatDate createdAt}}</div>
   <div class="attribute"><span class="label">Expires:</span> {{formatDate expiresAt}}</div>
-  {{#if lastAccessedAt}}
-    <div class="attribute"><span class="label">Last used:</span> {{formatDate lastAccessedAt}}</div>
-  {{/if}}
-  <button type="button" name="delete" class="btn alert">{{t 'app.delete'}}</button>
+  <div class="attribute"><span class="label">Last used:</span> {{#if publishedAt}}{{formatDate publishedAt}}{{else}}{{t 'app.never'}}{{/if}}</div>
+  <button type="button" name="delete" class="btn alert">{{t 'app.revoke'}}</button>
 </div>

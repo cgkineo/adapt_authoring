@@ -13,10 +13,21 @@ define(function(require){
     ],
 
     postRender: function() {
-      this.settings.preferencesKey = 'dashboard';
-      this.initUserPreferences();
-      this.initEventListeners();
-      this.initPaging();
+      this.fetchPublishedCourses(function() {
+        this.settings.preferencesKey = 'dashboard';
+        this.initUserPreferences();
+        this.initEventListeners();
+        this.initPaging();
+      }.bind(this));
+    },
+
+    fetchPublishedCourses: function(done) {
+      $.get('totaraconnect/courses').done(function(courses) {
+        this.publishedCourses = new Backbone.Collection(courses);
+        done();
+      }.bind(this)).fail(function(jqXhr) {
+        Origin.Notify.alert({ type: 'error', text: jqXhr.responseJSON.message });
+      });
     },
 
     initEventListeners: function() {
@@ -99,6 +110,11 @@ define(function(require){
 
     appendProjectItem: function(model) {
       var viewClass = model.isEditable() ? ProjectView : SharedProjectView;
+
+      if(this.publishedCourses) {
+        var publishData = this.publishedCourses.findWhere({ _id: model.get('_id') });
+        if(publishData) model.set('publishedAt', publishData.get('publishedAt'));
+      }
       this.getProjectsContainer().append(new viewClass({ model: model }).$el);
     },
 

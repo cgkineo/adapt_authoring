@@ -27,11 +27,16 @@
         <div class="project-detail-title">
           <h1 class="project-detail-title-inner">{{{title}}}</h1>
         </div>
-
         <div class="project-details-last-updated project-details-row">
           <div class="projects-details-label">{{t 'app.lastupdated'}}</div>
-          <div class="projects-details-value">{{momentFormat updatedAt "Do MMMM YYYY"}}</div>
+          <div class="projects-details-value">{{momentFormat updatedAt "DD.MM.YY"}}</div>
         </div>
+        {{#if publishedAt}}
+        <div class="project-details-published project-details-row">
+          <div class="projects-details-label">{{t 'app.published'}}</div>
+          <div class="projects-details-value">{{momentFormat publishedAt "DD.MM.YY"}}</div>
+        </div>
+        {{/if}}
         {{#if tags.length}}
         <div class="project-details-tags project-details-row tags">
           <div class="projects-details-tags-button">

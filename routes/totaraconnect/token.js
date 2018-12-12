@@ -39,12 +39,19 @@ var exports = module.exports = {
       if(!decodedData.user || !decodedData._tenantId) {
         return cb(errors.AuthorisationError(ErrorConsts.TokenInvalid));
       }
-      var resource = permissions.buildResourceString(decodedData._tenantId, permissionData.route);
-      permissions.hasPermission(decodedData.user, permissionData.action, resource, function(error, hasPermission) {
-        if(error || !hasPermission) {
-          return cb(errors.AuthorisationError(ErrorConsts.PermissionsCheck));
+      const query = { user: decodedData.user, _tenantId: decodedData._tenantId };
+      origin.db.retrieve('token', query, function(error, results) {
+        if(error || results.length !== 1) {
+          message = error && error.message || ErrorConsts.TokenNotFound.toLowerCase();
+          return cb(errors.AuthorisationError(`${ErrorConsts.TokenInvalid}, ${message}`));
         }
-        cb(null, decodedData);
+        var resource = permissions.buildResourceString(decodedData._tenantId, permissionData.route);
+        permissions.hasPermission(decodedData.user, permissionData.action, resource, function(error, hasPermission) {
+          if(error || !hasPermission) {
+            return cb(errors.AuthorisationError(ErrorConsts.PermissionsCheck));
+          }
+          origin.db.update('token', query, { consumedAt: new Date() }, error => cb(error, decodedData));
+        });
       });
     });
   }

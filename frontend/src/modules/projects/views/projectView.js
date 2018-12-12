@@ -8,7 +8,9 @@ define(function(require) {
   var Helpers = require('core/helpers');
 
   var ProjectView = OriginView.extend({
-    className: 'project-list-item',
+    className: function() {
+      return 'project-list-item ' + (this.model.get('publishedAt') ? 'published' : '');
+    },
     tagName: 'li',
 
     events: {

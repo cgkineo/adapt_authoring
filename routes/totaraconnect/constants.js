@@ -22,6 +22,7 @@ module.exports = {
       TokenGen: "Failed to generate authorisation token",
       TokenInvalid: "Authorisation token is not valid",
       TokenNoData: "Didn't generate token, no data passed",
+      TokenNotFound: "Token couldn't be matched with any existing tokens",
       NoToken: "Expected an authorisation token",
       NoAuth: "Expected authorisation header",
       UnexpectedToken: "Expected an authorisation token, received ",

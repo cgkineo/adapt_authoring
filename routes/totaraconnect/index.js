@@ -1,7 +1,7 @@
 var Constants = require('./constants');
 var origin = require('../../lib/application')();
 var permissions = require('../../lib/permissions');
-var router = require('./router');
+var router = require('./api');
 var schemas = require('./schemas');
 
 if(origin.configuration.getConfig('jwtSecret') === '') {

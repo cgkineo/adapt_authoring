@@ -25,7 +25,7 @@
       "required": false,
       "editorOnly": true
     },
-    "lastAccessedAt": {
+    "consumedAt": {
       "type": "date",
       "required": false,
       "editorOnly": true
