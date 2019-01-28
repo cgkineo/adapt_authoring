@@ -7,7 +7,7 @@ const router = express.Router();
 const crud = controller.crudWrapper(router);
 
 crud.get('/', (req, res, next) => {
-  const URL = configuration.getConfig('rootUrl') + req.originalUrl;
+  let URL = configuration.getConfig('rootUrl') + req.originalUrl;
   // ensures a trailing slash
   if(URL[URL.length-1] !== '/') URL += '/';
 
