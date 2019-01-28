@@ -1,10 +1,10 @@
-var express = require('express');
-var configuration = require('../../lib/configuration');
-var controller = require('./controller');
-var errors = require('./errors');
+const express = require('express');
+const configuration = require('../../lib/configuration');
+const controller = require('./controller');
+const errors = require('./errors');
 
-var router = express.Router();
-var crud = controller.crudWrapper(router);
+const router = express.Router();
+const crud = controller.crudWrapper(router);
 
 crud.get('/', (req, res, next) => {
   const URL = configuration.getConfig('rootUrl') + req.originalUrl;
