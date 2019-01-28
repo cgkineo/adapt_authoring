@@ -41,7 +41,7 @@ var exports = module.exports = {
       }
       const query = { user: decodedData.user, _tenantId: decodedData._tenantId };
       origin.db.retrieve('token', query, function(error, results) {
-        if(error || results.length !== 1) {
+        if(error || !results.length) {
           message = error && error.message || ErrorConsts.TokenNotFound.toLowerCase();
           return cb(errors.AuthorisationError(`${ErrorConsts.TokenInvalid}, ${message}`));
         }
